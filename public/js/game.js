@@ -5,8 +5,9 @@ const socket = io() //connect
 const $sendButton = document.getElementById('send')
 const $messagebar = document.getElementById('messagebar')
 const $messageContainer = document.getElementById('message-container')
-const $startButton = document.getElementById('start-button')
+const $readyButton = document.getElementById('ready-button')
 const $players = document.getElementsByClassName('player')
+const $extrainfo = document.getElementById('extrainfo')
 
 const $verbalHintSend = document.getElementById('send-verbal-hint')
 const $hintContainer = document.getElementById('verbal-hint-container')
@@ -59,6 +60,12 @@ function parseQS(){
 //join room iff querystring is valid
 const attemptJoin = ()=>{
   const joinReq = parseQS()
+
+  const uri = window.location.toString();
+  if (uri.indexOf("?") > 0) {
+      const clean_uri = uri.substring(0, uri.indexOf("?"));
+      window.history.replaceState({}, document.title, clean_uri);
+  }
   const player = {
     roomName: joinReq.roomName,
     username: joinReq.username
@@ -78,11 +85,9 @@ const attemptJoin = ()=>{
       })
     }
 
+    $extrainfo.innerHTML = "Translations by Yandex<br/>Room name: " + player.roomName
     //if room creator enable start button
     let qs = parseQS()
-    if(qs.joinOption === 'create'){
-      $startButton.style.display = 'block'
-    }
   })
 }
 
@@ -140,16 +145,13 @@ socket.on('disconnect-client', ()=>{
 //*************************STARTING THE GAME ****************************************
 
 //------------------choosing a word------------------------------------
-$startButton.onclick = ()=>{
-  $startButton.disabled = true;
-  socket.emit('start-game', parseQS().roomName, (ackError)=>{
-    if(ackError){
-      alert('Error has occurred.')
-      location.href = '/'
-      $startButton.disabled = false;
-    }
-  })
+$readyButton.onclick = ()=>{
+  $readyButton.disabled = true;
+  socket.emit('ready')
 }
+socket.on('update-ready-button', ({ready, needed})=>{
+  $readyButton.innerHTML = `${ready}/${needed} ready`
+})
 
 socket.on('end-round', ()=>{
   //alert('round ended!')
@@ -157,8 +159,9 @@ socket.on('end-round', ()=>{
   //reset all buttons
   for(let i =0; i < $hintButtons.length; i++){
     $hintButtons[i].disabled = true
-    $hintButtons[i].style.backgroundColor = "#C3D8DA"
-    $hintButtons[i].style.innerHTML =""
+    $hintButtons[i].style.backgroundColor = '#C3D8DA'
+    $hintButtons[i].style.innerHTML =''
+    $hintButtons[i].style.opacity = '0.5'
   }
 
   //verbal hint reset

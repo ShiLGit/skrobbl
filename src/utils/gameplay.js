@@ -25,7 +25,8 @@ const updateRoom = (roomName, newplayer)=>{
           score: 0,
           numHints: 0
         }
-      ]
+      ],
+      ready: 0
     }
 
     rooms.push(newRoom)
@@ -157,6 +158,15 @@ const getPlayersInRoom = (roomName)=>{
 
   return room.players
 }
+//return # players ready; #players needed
+const roomReady= (roomName)=>{
+  const room = rooms.find((ele)=>{
+    return ele.name === roomName
+  })
+  console.log(room)
+  room.ready++;
+  return {ready: room.ready, needed: room.players.length}
+}
 module.exports = {
   updateRoom,
   removePlayerFromRoom,
@@ -166,5 +176,6 @@ module.exports = {
   updateScore,
   updateNumHints,
   getRoomWord,
-  getPlayersInRoom
+  getPlayersInRoom,
+  roomReady
 }

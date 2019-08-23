@@ -117,9 +117,15 @@ io.on('connection', (socket)=>{ //listener for all socket events
     io.to(player.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(player.roomName))
   }
 
-  socket.on('start-game', (roomName, ack)=>{
-    chooseTyper()
-    ack()
+  //check if all players are ready
+  socket.on('ready', ()=>{
+    const player = players.getPlayer(socket.id)
+    const {ready, needed} = gameplay.roomReady(player.roomName)
+    if(ready === needed){
+      startRound()
+    }
+    io.to(player.roomName).emit('update-ready-button', {ready,needed})
+    io.to(player.roomName).emit('message-client', {username: 'SKROBBL BOT', text: `${player.username} is ready!`} )
   })
 
 //--------------------*1) CHOOSING WORDS
