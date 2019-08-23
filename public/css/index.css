@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css?family=Indie+Flower|Poiret+One|Concert+One|Josefin+Sans&display=swap');
+
+h1{
+  font-family: Indie Flower;
+  font-size: 80px;
+  margin: 10px;
+  text-align: center;
+}
+/*form*/
+#form{
+  display: inline-block;
+
+  background-color: #C3D898;
+  padding: 20px;
+  height: 400px;
+  width: 300px;
+
+  margin-left: 15%;
+}
+.initial-form{
+  margin: 20px;
+}
+form{
+  font-family: Poiret One;
+  font-size: 20px;
+  font-weight: bold;
+}
+h4{
+  font-size: 26px;
+  text-align: center;
+}
+input{
+  font-family: Poiret One;
+  font-size: 18px;
+  font-weight: bold;
+}
+[type^="text"]{
+  padding: 10px;
+  margin: 30px;
+  line-height: 1.3;
+}
+button{
+  width: 180px;
+  height: 35px;
+  margin: 0px 30px 5px 55px;
+
+  font-family: Poiret One;
+  font-size: 20px;
+  font-weight: bolder;
+  color: white;
+
+  background-color: #246A73;
+  border: 2px solid #1D565E;
+  transition: 0.3s;
+}
+button:hover{
+  height: 40px;
+  width: 190px;
+  background-color: #1D565E;
+}
+
+/*info*/
+#info{
+  display: inline-block;
+  font-family: josefin sans;
+  margin-left: 50px;
+  max-width: 700px;
+  max-height: 300px;
+
+  overflow-x: wrap;
+  color: #F2CD5D;
+}
+#wincon{
+  color:#1D565E;
+}
+
+.features{
+  color: #368F8B;
+}
+h5{
+  font-size: 20px;
+}

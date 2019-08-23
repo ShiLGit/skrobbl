@@ -1,0 +1,320 @@
+@import url('https://fonts.googleapis.com/css?family=Hind+Siliguri|Indie+Flower|Lexend+Deca&display=swap');
+/*
+QUIIK CALORS
+#160F29
+#FADF63
+#246A73
+#C3D898
+#368F8B
+*/
+
+body{
+  background-color: white;
+}
+
+.wrapper{
+  display: grid;
+  grid-template-columns: 20vw 50vw 25vw;
+  grid-template-rows:15vh 80vh;
+
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+}
+
+h1{
+  font-family: Lexend Deca;
+  font-size: 20px;
+  color: white;
+}
+/*--TITEL BAR-----------------------------------------------------------------*/
+.title-wrapper{
+  position: relative;
+  background-color: #D6E681;
+
+  grid-row-start: 1;
+  grid-row-end: 2;
+
+  grid-column-start: 1;
+  grid-column-end: 4;
+
+  display: grid;
+  grid-template-columns:20vw 60vw 20vw;
+  grid-template-rows: 50% 50%;
+
+}
+.title-wrapper h1{
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 3;
+
+  font-size: 60px;
+  text-align: center;
+  margin-top: 10px;
+  font-family: Indie Flower;
+  font-weight: bold;
+  color: black;
+
+  display: inline-block;
+}
+.title-wrapper h6{
+  position: absolute;
+  font-family: Lexend Deca;
+  margin: 5px 5px 0px 0px;
+  top: 0px;
+  right: 0px;
+}
+.title-wrapper button{
+  font-family: Lexend Deca;
+  margin: 10px;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  background-color: white;
+  border: none;
+}
+#start-button{
+
+}
+/*HINT BOX--------------------------------------------------------------------*/
+.hints-wrapper{
+  background-color:#FADF63;
+  grid-row-start: 2;
+  display: grid;
+  grid-template-rows: 15% 60% 20%;
+  grid-template-columns: 50% 50%;
+
+  grid-column-gap: 10px;
+  grid-row-gap: 15px;
+  padding: 20px;
+}
+
+#word{
+  font-size: 30px;
+  font-family: Lexend Deca;
+  text-align: center;
+
+  grid-row-start: 1;
+  grid-row-end: 2;
+
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+#hint-array{
+
+  grid-row-start: 2;
+  grid-row-end: 3;
+
+  padding-left: 20%;
+  padding-top: 20px;
+}
+
+#hint-array button{
+  height: 15%;
+  width: 25%;
+
+  background-color: #C3D8DA;
+  opacity: 0.5;
+  border: none;
+  transition: 0.4s;
+  font-family: Lexend Deca;
+}
+
+#hint-array button:hover{
+  opacity: 1;
+}
+
+#hint-array h2{
+  padding-left: 10%;
+  font-family: Lexend Deca;
+  color: black;
+}
+
+/*HINTBOX > MESSAGING*/
+#hint-log{
+  grid-row-start: 2;
+  grid-column-start: 2;
+}
+
+#hint-log h2{
+  font-family: Lexend Deca;
+  text-align: center;
+  padding-right: 5%;
+}
+
+#verbal-hint-container{
+  background-color: #FDF3C6;
+  border-top: 8px solid #30646B;
+
+  height: 75%;
+  width:90%;
+
+  border-radius: 2px;
+}
+
+#send-verbal-hint{
+    grid-row-start: 3;
+    background-color: white;
+    grid-column-start: 1;
+    grid-column-end: 3;
+
+}
+#helper-bar{
+  margin-top: 0px;
+  background-color: #E87461;
+  width: 100%;
+
+  opacity: 0.8;
+  transition: 0.3s;
+}
+#helper-bar:hover{
+  opacity: 1;
+}
+#helper-msg{
+  margin-top: 0px;
+  font-size: 14px;
+  font-family: Lexend Deca;
+  padding: 5px;
+  padding-left: 3%;
+}
+#send-verbal-hint input{
+  width: 75%;
+  padding: 10px;
+  border: 2px solid grey;
+  font-size: 16px;
+  font-family: Hind Siliguri;
+  margin-left: 20px;
+}
+#send-verbal-hint button{
+  font-family: Lexend Deca;
+
+  height: 48px;
+  background-color: #2F3061;
+  border: 2px solid #272850;
+  width: 15%;
+}
+/*CHAT BOX--------------------------------------------------------------------*/
+.chat-wrapper{
+  background-color: #160F29;
+  grid-row-start: 2;
+
+  padding: 20px;
+}
+
+#message-container{
+  width: 95%;
+  height: 80%;
+  padding: 15px;
+  font-family: Lexend Deca;
+  font-size: 16px;
+  overflow-y: scroll;
+}
+
+#send-message{
+  margin: 10px 5% 10% 5%;
+}
+#send-message input{
+  width: 75%;
+  font-family: Lexend Deca;
+}
+#send-message button{
+  background-color: #DB162F;
+  border: 2px solid #B41327;
+  font-family: Lexend Deca;
+}
+
+/*SCOREBOARD------------------------------------------------------------------*/
+.score-wrapper{
+    background-color: #246A73;
+    grid-row-start: 2;
+
+    padding: 10px;
+    position: relative;
+    overflow-y: scroll;
+}
+
+.player{
+  color:black;
+  font-family: Hind Siliguri;
+  width: 80%;
+
+  background-color: #D6E681;
+  padding: 3px;
+  margin: 10px;
+  border: 9px solid #368F8B;
+  display: none;
+}
+.player img{
+  width: 30%;
+
+  display: inline-block;
+  margin: 30px 10px 0px 10px;
+}
+.playertext{
+  display: inline-block;
+  height: 5vh;
+}
+.playertext h2{
+  font-size: 20px;
+
+}
+.playertext p{
+  font-size: 16px;
+}
+/*MODAL-----------------------------------------------------------------------*/
+#modal{
+  z-index: 1;
+  display: none;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.8);
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+
+  top: 0px;
+  transition: all 0.3s ease;
+}
+#modal-content{
+  position: absolute;
+  top: 15%;
+  left: 40%;
+  right: 40%;
+}
+
+#modal button{
+  height: 40px;
+  font: Hind Siliguri;
+  font-weight: bold;
+  border: 2px solid white;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+#modal h2{
+  color: white;
+  font-family: Lexend Deca;
+}
+
+/*NOTIFICATIONS---------------------------------------------------------------*/
+#notif{
+  position: absolute;
+  top: 0px;
+  z-index: 1;
+  margin-left: 40%;
+  padding: 20px;
+
+  background-color: white;
+  height: 150px;
+  width: 300px;
+}
+/*INSTANTIATED----------------------------------------------------------------*/
+.msg-bg{
+  background-color: ivory;
+  font-family: Lexend Deca;
+  overflow: flex;
+
+  padding: 10px;
+  margin-top: 10px;
+  font-family: Lexend Deca;
+  line-height: 0.5;
+}

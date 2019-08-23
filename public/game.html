@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<header>
+  <title>skrobbl</title>
+  <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel = "stylesheet" type = "text/css" href = "./css/game.css"/>
+</header>
+
+<body>
+<!--
+  <div id = "notif" class = "animated slideInDown">
+    <div class = "notifbody">
+      <h3 id = "notif-text">NOTIFICATION</h3>
+      <h6>(click anywhere on this notification to close it)</h6>
+    </div>
+  </div>
+-->
+
+<div class = "wrapper">
+
+  <div class = "title-wrapper">
+    <button id = "start-button">START</button></br>
+    <button id = "help">HELP</button>
+    <h1 class = "animated bounceIn">skrobbl</h1>
+    <h6>Translations by Yandex</h6>
+  </div>
+
+  <div class = "score-wrapper">
+    <h1>SCOREBOARD</h1>
+    <div class = "player" class = "animated bounceIn"></div>
+    <div class = "player" class = "animated bounceIn"></div>
+    <div class = "player" class = "animated bounceIn"></div>
+    <div class = "player" class = "animated bounceIn"></div>
+    <div class = "player" class = "animated bounceIn"></div>
+    <div class = "player" class = "animated bounceIn"></div>
+    <div class = "player" class = "animated bounceIn"></div>
+    <div class = "player" class = "animated bounceIn"></div>
+  </div>
+
+  <div class = "hints-wrapper">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <h2 id = "word">________</h2>
+
+    <div id = "hint-array">
+      <h2>Button Hints</h2>
+
+      <button id = 'hb1'> </button><button id = 'hb2'> </button><button id = 'hb3'> </button><br/>
+      <button id = 'hb4'> </button><button id = 'hb5'> </button><button id = 'hb6'> </button><br/>
+      <button id = 'hb7'> </button><button id = 'hb8'> </button><button id = 'hb9'> </button><br/>
+      <button id = 'hb10'> </button><button id = 'hb11'> </button><button id = 'hb12'> </button><br/>
+    </div><br>
+
+    <div id = "hint-log">
+      <h2>Hint Log</h2>
+      <div id = "verbal-hint-container"></div>
+    </div>
+
+    <div id = "send-verbal-hint">
+      <div id ="helper-bar" class = "animated fadeInDown"><p id = "helper-msg">ⓘ Type a hint below to display on the hint log</p></div>
+      <input type = "text" autocomplete = "off" autofocus = "true"/>
+      <button id = "hint">Hint</button>
+    </div>
+
+  </div>
+
+  <div class = "chat-wrapper">
+    <h1>CHAT</h1>
+    <div id = "message-container"></div>
+    <form id = "send-message">
+      <input id = "messagebar" type = "text" autocomplete = "off" autofocus = "true" placeholder = "Enter guess here"/>
+      <button id = "send">Send</button>
+    </form>
+  </div>
+
+</div>
+
+<!--INSTANTIATED-->
+<div id = "modal">
+  <span id = "modal-content">
+    <h2>Choose a word: </h2>
+    <button id = "choice1" class = "choices">Word1</button><button id= "choice2" class = "choices">Word2</button><button id = "choice3" class = "choices">Word3</button>
+  </span>
+</div>
+
+<script id = "message-template" type = "text/html">
+  <div class = "msg-bg">
+    <h4 class = "username">{{username}}</h4>
+    <p class = "msg-text">{{text}}</p>
+  </div>
+</script><br/>
+
+<script id = "hint-template" type = "text/html">
+  <div class = "hint-bg">
+    <p class = "hint-text">{{text}}</p>
+  </div>
+</script><br/>
+
+<script src = "/socket.io/socket.io.js"></script>
+<script src = "./js/game.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+
+</body>
+
+</html>

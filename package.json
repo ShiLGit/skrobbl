@@ -1,0 +1,24 @@
+{
+  "name": "skrobbl",
+  "version": "1.0.0",
+  "description": "chat-based word charade game (inspired by skribbl.io)",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "line-reader": "^0.4.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "socket.io": "^2.2.0",
+    "spell-checker-js": "^1.2.6",
+    "yandex-translate": "^2.1.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./src/index.js"
+  },
+  "author": "Lilian Shi",
+  "license": "ISC"
+}

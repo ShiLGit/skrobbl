@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>skrobbl</title>
+  <link rel = "stylesheet" href = "./css/index.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h1>skrobbl</h1>
+
+  <div id = "form">
+  <form class = "initial-form" action = "/game.html" id = "join-form">
+    <h4>Welcome to skrobbl!</h4>
+    <input type = "radio" id = "create" name = "join-option" required = "true" value = "create">Create Room</input>
+    <input type = "radio" id = "join" name = "join-option" required = "true" value = "join">Join Room</input><br/>
+    <input type = "text" id = "room-name" placeholder="Room Name" autocomplete = "false" required = "true" name = "room-name"/><br/>
+    <input type = "text" id = "username" placeholder="Username" autocomplete = "false" required = "true" name = "username"/><br/>
+  </form>
+
+  <button type = "button" id = "go-button">Go</button>
+  </div>
+
+  <div id = "info">
+    <h5>skrobbl is a word-guessing web game inspired by <a href = "https://skribbl.io">skribbl.io</a></h5>
+      <p id = "wincon">Win condition: have the most points at the end of the game</p>
+      <p>Typer (role): one per round. Choose one of three words for other players to guess. The game ends when every player has had a turn as the typer.</p>
+      <p>Guesser (role): guess the word the typer has chosen. The earlier you make a correct guess, the higher your score.</p>
+      <p class = "features">Picture hints: an array of nine buttons will be populated with random words at the beginning of the round. The typer will pick the three that are most relevant to the secret word as a hint to the other players; they will be able to see the typer's choices.</p>
+      <p class = "features">Word hints: the typer can type five sentences (there really isn't a reason to type fewer) into the hint box for guessers to see. NOTE: they get run through a translation app fourteen times before printing!!! (hints with more words yield more points to the typer)</p>
+      <p class = "features">Vote quit: guessers can vote to skip a round if it is too difficult to guess. Points will be deducted from the typer's score.</p>
+      <h6>TRANSLATIONS BY YANDEX!!!!!!!</h6>
+  </div>
+
+  <script src = "/socket.io/socket.io.js"></script>
+  <script src = "./js/indexclient.js"></script>
+</html>
