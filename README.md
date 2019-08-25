@@ -17,6 +17,7 @@ ROLES
 -Guesser (role): guess the word the typer has chosen. The earlier you make a correct guess, the higher your score.
 
 HINTS
+
 -Button hints: an array of twelve buttons will be populated with random words at the beginning of the round. The typer will pick those that are relevant to the secret word as a hint to the other players; they will be able to see the typer's choices.
 
 -Sentence hints: the typer can type clues for the other guessers to see. However, they get run through Yandex translate (translation api) -multiple times before being printed (to muddle their meaning)
