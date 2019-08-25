@@ -167,6 +167,15 @@ const roomReady= (roomName)=>{
   room.ready++;
   return {ready: room.ready, needed: room.players.length}
 }
+
+const allRooms = ()=>{
+  const roomlist = []
+
+  for(let i = 0; i < rooms.length; i++){
+    roomlist.push({name: rooms[i].name, numPlayers: rooms[i].players.length})
+  }
+  return roomlist
+}
 module.exports = {
   updateRoom,
   removePlayerFromRoom,
@@ -177,5 +186,6 @@ module.exports = {
   updateNumHints,
   getRoomWord,
   getPlayersInRoom,
-  roomReady
+  roomReady,
+  allRooms
 }

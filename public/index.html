@@ -12,13 +12,12 @@
   <form class = "initial-form" action = "/game.html" id = "join-form">
     <h4>Welcome to skrobbl!</h4>
     <input type = "radio" id = "create" name = "join-option" required = "true" value = "create">Create Room</input>
-    <input type = "radio" id = "join" name = "join-option" required = "true" value = "join">Join Room</input><br/>
-    <input type = "text" id = "room-name" placeholder="Room Name" autocomplete = "false" required = "true" name = "room-name"/><br/>
-    <input type = "text" id = "username" placeholder="Username" autocomplete = "false" required = "true" name = "username"/><br/>
-
+    <input type = "radio" id = "join" name = "join-option" required = "true" value = "join">Join Existing Room</input><br/>
+    <div id = "join-option-display">
+    </div>
+    <button type = "button" id = "go-button">Go</button>`
   </form>
 
-  <button type = "button" id = "go-button">Go</button>
   </div>
 
   <div id = "info">

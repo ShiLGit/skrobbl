@@ -61,9 +61,10 @@ function parseQS(){
 const attemptJoin = ()=>{
   const joinReq = parseQS()
 
+  //remove qs from url
   const uri = window.location.toString();
-  if (uri.indexOf("?") > 0) {
-      const clean_uri = uri.substring(0, uri.indexOf("?"));
+  if (uri.indexOf("game.html") > 0) {
+      const clean_uri = uri.substring(0, uri.indexOf("game.html"));
       window.history.replaceState({}, document.title, clean_uri);
   }
   const player = {
@@ -93,7 +94,6 @@ const attemptJoin = ()=>{
 
 //populate sidebar with player info
 socket.on('populate-sidebar', (players)=>{
-  console.log(players.length)
   let i = 0;
   for(i=0; i< players.length; i++){
     $players[i].style.display = "block"
@@ -143,7 +143,6 @@ socket.on('disconnect-client', ()=>{
 })
 
 //*************************STARTING THE GAME ****************************************
-
 //------------------choosing a word------------------------------------
 $readyButton.onclick = ()=>{
   $readyButton.disabled = true;
@@ -183,6 +182,9 @@ socket.on('typer', ()=>{
     }
     document.getElementById('modal').style.display = 'inline-block'
   })
+  for(let i = 0; i< $hintButtons.length; i++){
+    $hintButtons[i].disabled = false
+  }
 })
 
 //SET LISTENER ON ALL MODAL BUTTONS FOR ONCLICK EVENT
@@ -203,7 +205,6 @@ socket.on('update-word', (secretWord)=>{
   let numLetters = Math.ceil(word.length*0.3)
   const indexIncrement = Math.floor((word.length/numLetters))
   let letterIndex = indexIncrement
-  console.log(numLetters, letterIndex)
 
   //header text calculate
   for(let i = 0; i<word.length; i++){
@@ -232,7 +233,6 @@ socket.on('render-hints', (hints)=>{
   }
 })
 socket.on('update-hint-buttons', (i)=>{
-  console.log('i = ', i)
   $hintButtons[i].style.opacity = 1;
 })
 
@@ -273,12 +273,6 @@ $hintButtons[10].onclick = ()=>{
 $hintButtons[11].onclick = ()=>{
   socket.emit('chose-hint', 11)
 }
-//DISALLOW GUESSERS TO MESS UP HINTS
-socket.on('disable-hints', ()=>{
-  for(let i = 0; i < $hintButtons.length; i++){
-    $hintButtons[i].disabled = true
-  }
-})
 
 //VERBAL HINTS: CHECK IF HINT SENT IS VALID, DISPLAY HELPERMSG IF NOT
 document.getElementById('hint').onclick = (e)=>{

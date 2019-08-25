@@ -19,7 +19,10 @@ const port = process.env.PORT || 3000
 io.on('connection', (socket)=>{ //listener for all socket events
   let disableChat = false
 //------------------------------------ PLAYER CONNECTION + DISCONNECTION ----------------------------------------------*
-
+  socket.on('request-active-rooms', (ack)=>{
+    console.log('tesju', gameplay.allRooms())
+    ack(gameplay.allRooms())
+  })
   //self explanatory, IDIOT!
   socket.on('disconnect', ()=>{
     const toRemove = players.getPlayer(socket.id)
@@ -97,8 +100,9 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
       if(flag === 0){
         console.log('time to end tha round!!!!!!')
-        startRound()
         io.to(player.roomName).emit('end-round')
+        startRound()
+
       }
       disableChat = true
     }else{
@@ -171,7 +175,6 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
     io.to(typerid).emit('typer')
     io.to(player.roomName).emit('message-client', {username: 'SKROBBL BOT', text: `${typer} is the typer!`})
-    socket.broadcast.to(player.roomName).emit('disable-hints')
   }
 
 //----------------------GIVING HINTS --------------------------------------------

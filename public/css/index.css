@@ -12,7 +12,7 @@ h1{
 
   background-color: #C3D898;
   padding: 20px;
-  height: 400px;
+  height: 430px;
   width: 300px;
 
   margin-left: 15%;
@@ -22,8 +22,10 @@ h1{
 }
 form{
   font-family: Poiret One;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
+
+  position: relative;
 }
 h4{
   font-size: 26px;
@@ -31,7 +33,7 @@ h4{
 }
 input{
   font-family: Poiret One;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
 }
 [type^="text"]{
@@ -45,18 +47,34 @@ button{
   margin: 0px 30px 5px 55px;
 
   font-family: Poiret One;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bolder;
   color: white;
 
   background-color: #246A73;
   border: 2px solid #1D565E;
   transition: 0.3s;
+
+  position: absolute;
+  bottom: 20px;
 }
 button:hover{
   height: 40px;
   width: 190px;
   background-color: #1D565E;
+}
+
+#join-option-display{
+  background-color: cornflowerblue;
+  height: 300px;
+  position: relative;
+  display: grid;
+  grid-template-rows: 50px 50px 50px 50px 50px 50px;
+}
+p{
+  grid-row-start: 2;
+  grid-row-end:3;
+  text-align: center;
 }
 
 /*info*/
