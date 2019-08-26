@@ -48,25 +48,29 @@ const updateRoom = (roomName, newplayer)=>{
 //delete player, autodelete room if leaving player is last player of room; return true for room is gone, false for room still exists
 const removePlayerFromRoom = (username, roomName) =>{
   let roomIndex = 0
-  const room = rooms.find((ele)=>{
-    roomIndex++
-    return ele.name === roomName
-  })
+  try{//room is sometimes === undefined when many players instantaneously disconnect, which will throw error
+    const room = rooms.find((ele)=>{
+      roomIndex++
+      return ele.name === roomName
+    })
+    const index = room.players.findIndex((ele)=>{
+      return ele.username === username
+    })
 
-  const index = room.players.findIndex((ele)=>{
-    return ele.username === username
-  })
-
-  if(index !== -1){ //delete from players array
-    const removedPlayer = room.players.splice(index, 1)[0]
-  }
-  if(room.players.length === 0){
-    rooms.splice(0)
+    if(index !== -1){ //delete from players array
+      const removedPlayer = room.players.splice(index, 1)[0]
+    }
+    if(room.players.length === 0){
+      rooms.splice(0)
+      console.log('Remaining rooms: ', rooms)
+      return true
+    }
     console.log('Remaining rooms: ', rooms)
-    return true
+    return false
+  }catch(err){
+    console.log(err)
   }
-  console.log('Remaining rooms: ', rooms)
-  return false
+
 }
 
 const chooseTyper = (roomName)=>{
@@ -161,11 +165,15 @@ const getRoomWord = (roomName) =>{
 
 //return game info about all player in room
 const getPlayersInRoom = (roomName)=>{
-  const room = rooms.find((ele)=>{
-    return ele.name === roomName
-  })
+  try{//ROOM IS SOMETIMES UNDEFINED WHEN MANY DCS HAPPEN AT SAME INSTNANT
+    const room = rooms.find((ele)=>{
+      return ele.name === roomName
+    })
 
-  return room.players
+    return room.players
+  }catch(err){
+    console.log(err)
+  }
 }
 //return # players ready; #players needed
 const roomReady= (roomName)=>{
