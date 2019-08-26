@@ -42,17 +42,17 @@ function parseQS(){
   let end = qs.indexOf('&')
   joinReq.joinOption = qs.slice(start+1, end)
 
-  //parse roomName
+  //parse username
   qs =qs.replace('=', '0') //set up string so that indexOf() doesn't return indices for old properties
   qs =qs.replace('&', '0')
   start = qs.indexOf('=')
   end = qs.indexOf('&')
-  joinReq.roomName = qs.slice(start+1, end)
+  joinReq.username = qs.slice(start+1, end)
 
-  //parse username
+  //parse roomName
   qs =qs.replace('=', '0')
   start = qs.indexOf('=')
-  joinReq.username = qs.slice(start+1)
+  joinReq.roomName = qs.slice(start+1)
 
   return joinReq
 }
@@ -282,7 +282,7 @@ document.getElementById('hint').onclick = (e)=>{
 
   $helperMsg.innerHTML = 'please wait - translating message! (will take a few seconds)'
   socket.emit('verbal-hint', $hintbar.value, (ack)=>{
-    if(ack.error){
+    if(ack){
       $helperMsg.style.display = 'block'
       $helperMsg.innerHTML = ack.error
     }

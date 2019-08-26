@@ -20,7 +20,6 @@ io.on('connection', (socket)=>{ //listener for all socket events
   let disableChat = false
 //------------------------------------ PLAYER CONNECTION + DISCONNECTION ----------------------------------------------*
   socket.on('request-active-rooms', (ack)=>{
-    console.log('tesju', gameplay.allRooms())
     ack(gameplay.allRooms())
   })
   //self explanatory, IDIOT!
@@ -29,10 +28,12 @@ io.on('connection', (socket)=>{ //listener for all socket events
     if(!toRemove){
       return console.log('FROM DISCONNECT: nothing to remove')
     }
-    gameplay.removePlayerFromRoom(toRemove.username, toRemove.roomName)
-
+    const deleted = gameplay.removePlayerFromRoom(toRemove.username, toRemove.roomName)
     const player = players.removePlayer(socket.id)
-    console.log('post-remove: ', players.players)
+
+    if(deleted === true){
+      return
+    }
     console.log('?????????', gameplay.getPlayersInRoom(player.roomName))
     io.to(player.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(player.roomName))
 
@@ -72,12 +73,12 @@ io.on('connection', (socket)=>{ //listener for all socket events
     })
 
     if(newplayer.error){//this executes if players.js returns object with error (from addPlayer())
-      acknowledge(newplayer.error)
+      return acknowledge(newplayer.error)
     }
     gameplay.updateRoom(newplayer.roomName, newplayer)
 
     if(gameplay.getPlayersInRoom(newplayer.roomName).length > 8){
-      acknowledge('Error: room is already full (8 players)')
+      return acknowledge('Error: room is already full (8 players)')
     }
     socket.join(newplayer.roomName)
     socket.broadcast.to(newplayer.roomName).emit('message-client', {username: 'SKROBBL BOT', text: `${newplayer.username} has joined the room.`})

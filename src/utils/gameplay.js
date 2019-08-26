@@ -1,4 +1,4 @@
-//this module is for keeping track of what's going on in each room during gameplay (adds additional information to each player object, groups players into rooms)
+//this module is for keeping track of what's going on in each room during gameplay (keeps player objects with more in-game info, groups players into rooms)
 const rooms = []
 //[{roomname, players}, {roomname2, players2} ...]
 /*
@@ -41,12 +41,15 @@ const updateRoom = (roomName, newplayer)=>{
     }
 
     room.players.push(playerToAdd)
-    console.log(room.name, ":", room.players)
+    console.log("all rooms: ", rooms)
   }
 }
 
+//delete player, autodelete room if leaving player is last player of room; return true for room is gone, false for room still exists
 const removePlayerFromRoom = (username, roomName) =>{
+  let roomIndex = 0
   const room = rooms.find((ele)=>{
+    roomIndex++
     return ele.name === roomName
   })
 
@@ -54,10 +57,16 @@ const removePlayerFromRoom = (username, roomName) =>{
     return ele.username === username
   })
 
-  if(index !== -1){ //delete from array
-    return room.players.splice(index, 1)[0]
+  if(index !== -1){ //delete from players array
+    const removedPlayer = room.players.splice(index, 1)[0]
   }
-  console.log('removed..', room.name, ":", room.players)
+  if(room.players.length === 0){
+    rooms.splice(0)
+    console.log('Remaining rooms: ', rooms)
+    return true
+  }
+  console.log('Remaining rooms: ', rooms)
+  return false
 }
 
 const chooseTyper = (roomName)=>{

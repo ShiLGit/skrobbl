@@ -1,4 +1,4 @@
-//this file is mostly for validating join requests - contains all BASIC information about all players (players exist in array independently)
+//this file is mostly for keeping track of each player's basic information: better for player validation, finding basic information from socketid (to later be used in gameplay.js)
 
 const gamplay = require('./gameplay.js')
 const players = []
@@ -20,7 +20,6 @@ const addPlayer = ({id, username, roomName}) =>{
 
   const player = {id, username, roomName}
   players.push(player)
-  console.log('all players (post addPlaer()): ', players)
   return(player)
 }
 
