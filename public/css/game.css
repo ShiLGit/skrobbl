@@ -195,6 +195,23 @@ h1{
   border: 2px solid #272850;
   width: 15%;
 }
+
+.hint-bg{
+  background-color:#73A0A5;
+  margin-top: 2px;
+}
+.hint-text{
+  font-family: Lexend Deca;
+}
+
+.round-status-bg{
+  background-color: black;
+}
+.round-status-text{
+  color:white;
+  font-family: Lexend Deca;
+  text-align: center;
+}
 /*CHAT BOX--------------------------------------------------------------------*/
 .chat-wrapper{
   background-color: #160F29;

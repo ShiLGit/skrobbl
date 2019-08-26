@@ -17,15 +17,25 @@ const $hintButtons = [document.getElementById('hb1'),document.getElementById('hb
                       document.getElementById('hb4'),document.getElementById('hb5'),document.getElementById('hb6'),
                       document.getElementById('hb7'),document.getElementById('hb8'),document.getElementById('hb9'),
                       document.getElementById('hb10'),document.getElementById('hb11'),document.getElementById('hb12')]
+const $notifBox = document.getElementById('notif')
 
 const messageTemplate = document.getElementById('message-template').innerHTML
 const hintTemplate = document.getElementById('hint-template').innerHTML
 const allAvatars = ['../img/avatar_1.png', '../img/avatar_2.png', '../img/avatar_3.png', '../img/avatar_4.png','../img/avatar_5.png', '../img/avatar_6.png']
-//const roundHeaderTemplate = document.getElementById('round-header-template').innerHTML
-/*
+
+//*******************************FUNKI CSS NOTIFICATIONS
 $notifBox.onclick = ()=>{
   $notifBox.style.display = 'none'
-}*/
+}
+
+const notification = (titleText, bodyText)=>{
+  const $title = document.getElementById('notif-header')
+  const $body = document.getElementById('notif-body')
+
+  $title.innerHTML = titleText
+  $body.innerHTML = bodyText
+  $notifBox.style.display = 'block'
+}
 
 //****************************STEP 1: JOIN ROOM ************************************
 //parse querystring to create user object
@@ -110,7 +120,7 @@ socket.on('populate-sidebar', (players)=>{
   }
 })
 attemptJoin()
-
+notification('Welcome to skrobbl!', 'The game will start when all players have clicked the "ready" button')
 
 //******************************* BASIC MESSAGING ***************************************
 $sendButton.onclick = (e)=>{
@@ -164,8 +174,8 @@ socket.on('end-round', ()=>{
   }
 
   //verbal hint reset
-  const roundEndedHTML = `<div class = "round-header-bg">
-                            <p class = "round-header-text">NEW ROUND</p>
+  const roundEndedHTML = `<div class = "round-status-bg">
+                            <p class = "round-status-text">NEW ROUND</p>
                           </div>`
   $hintContainer.insertAdjacentHTML('beforeend', roundEndedHTML)
   $verbalHintSend.style.display = 'none';
