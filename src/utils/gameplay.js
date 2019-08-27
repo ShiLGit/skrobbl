@@ -217,12 +217,32 @@ const orderScores = (roomName)=>{
         }
       }
       //remove max val from players array;
-      console.log('max: ', players[maxIndex], maxIndex)
       toReturn.push(players[maxIndex].username)
-      console.log('remaining array: ', players)
       players.splice(maxIndex, 1)
     }
     return toReturn
+  }catch(e){
+    console.log(e)
+    return null
+  }
+}
+
+//reset player points, word, ready
+const resetRoom = (roomName)=>{
+  console.log('reset.')
+  try{
+    const room = rooms.find((ele)=>{
+      return ele.name === roomName
+    })
+
+    for(let i = 0; i <room.players.length; i++){
+      room.players[i].score = 0
+      room.players[i].typeStatus = 0
+      room.players[i].numHints = 0
+    }
+    room.ready = 0
+    room.word = undefined
+    console.log('post reset: ', room)
   }catch(e){
     console.log(e)
     return null
@@ -240,5 +260,6 @@ module.exports = {
   getPlayersInRoom,
   roomReady,
   allRooms,
-  orderScores
+  orderScores,
+  resetRoom
 }

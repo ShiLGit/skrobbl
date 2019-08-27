@@ -32,6 +32,8 @@ $notifBox.onclick = ()=>{
 const notification = (titleText, bodyText, special)=>{
   const $title = document.getElementById('notif-header')
   const $body = document.getElementById('notif-body')
+  $notifBox.style.backgroundColor = 'white'
+
   let timeout = 6000
 
   $title.innerHTML = titleText
@@ -43,7 +45,6 @@ const notification = (titleText, bodyText, special)=>{
     timeout = 20000
   }
   $notifBox.style.display = 'block'
-
   setTimeout(()=>{
     $notifBox.style.display = 'none'
   }, timeout)
@@ -338,7 +339,8 @@ socket.on('end-game', ({players, word})=>{
   }
   notification(`${players[0]} wins!`, html, 1)
 
-  $readyButton.text = 'PLAY AGAIN'
+
+  $readyButton.innerHTML = 'PLAY AGAIN'
   $readyButton.disabled = false
 })
 const resetUI = ()=>{

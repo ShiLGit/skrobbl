@@ -175,7 +175,8 @@ io.on('connection', (socket)=>{ //listener for all socket events
     const typerid = gameplay.chooseTyper(player.roomName)
     if(typerid === undefined){
         console.log('game haz ended fam')
-        return io.to(player.roomName).emit('end-game', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
+        io.to(player.roomName).emit('end-game', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
+        return gameplay.resetRoom(player.roomName)
     }
 
     console.log('typer id: ' + typerid)
