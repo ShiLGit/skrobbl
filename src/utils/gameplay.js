@@ -185,6 +185,7 @@ const roomReady= (roomName)=>{
   return {ready: room.ready, needed: room.players.length}
 }
 
+//return all roomnames + population
 const allRooms = ()=>{
   const roomlist = []
 
@@ -192,6 +193,40 @@ const allRooms = ()=>{
     roomlist.push({name: rooms[i].name, numPlayers: rooms[i].players.length})
   }
   return roomlist
+}
+
+//return array of player names (in a room), ordered according to their score
+const orderScores = (roomName)=>{
+  try{
+    const room = rooms.find((ele)=>{
+      return ele.name === roomName
+    })
+
+    //insertion sort because array will always b small!!!
+    let players = [...room.players]
+    let toReturn = []
+    let length = players.length
+
+    for(let i = 0; i < length; i++){
+      //find max in remaining array
+      let max = -1
+      for(let j = 0; j < players.length; j++){
+        if(max < players[j].score){
+          max = players[j].score
+          maxIndex = j
+        }
+      }
+      //remove max val from players array;
+      console.log('max: ', players[maxIndex], maxIndex)
+      toReturn.push(players[maxIndex].username)
+      console.log('remaining array: ', players)
+      players.splice(maxIndex, 1)
+    }
+    return toReturn
+  }catch(e){
+    console.log(e)
+    return null
+  }
 }
 module.exports = {
   updateRoom,
@@ -204,5 +239,6 @@ module.exports = {
   getRoomWord,
   getPlayersInRoom,
   roomReady,
-  allRooms
+  allRooms,
+  orderScores
 }

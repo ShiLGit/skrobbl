@@ -28,13 +28,25 @@ $notifBox.onclick = ()=>{
   $notifBox.style.display = 'none'
 }
 
-const notification = (titleText, bodyText)=>{
+//create a notification
+const notification = (titleText, bodyText, special)=>{
   const $title = document.getElementById('notif-header')
   const $body = document.getElementById('notif-body')
+  let timeout = 6000
 
   $title.innerHTML = titleText
   $body.innerHTML = bodyText
+
+  //create game-end notification if special = 1
+  if(special === 1){
+    $notifBox.style.backgroundColor = '#F9DBBD'
+    timeout = 20000
+  }
   $notifBox.style.display = 'block'
+
+  setTimeout(()=>{
+    $notifBox.style.display = 'none'
+  }, timeout)
 }
 
 //****************************STEP 1: JOIN ROOM ************************************
@@ -120,8 +132,6 @@ socket.on('populate-sidebar', (players)=>{
   }
 })
 attemptJoin()
-notification('Welcome to skrobbl!', 'The game will start when all players have clicked the "ready" button')
-
 //******************************* BASIC MESSAGING ***************************************
 $sendButton.onclick = (e)=>{
   e.preventDefault() //prevent browser from going through full page refresh (default behavior for forms)
@@ -135,6 +145,18 @@ $sendButton.onclick = (e)=>{
 
 //when receiving msg from server: render it onto the screen
 socket.on('message-client', ({username, text})=>{
+  if(username === 'SKROBBL' || username === 'Welcome to skrobbl!'){
+    const html =
+    `<div class = "speshul">
+        <h4 class = "username">${username}</h4>
+        <p class = "msg-text">${text}</p>
+      </div>`
+
+    $messageContainer.insertAdjacentHTML('beforeend', html)
+    $messageContainer.scrollTop = $messageContainer.scrollHeight
+    return
+  }
+
   const html = Mustache.render(messageTemplate, {
     username,
     text
@@ -146,7 +168,7 @@ socket.on('message-client', ({username, text})=>{
 //when user disconnect is alerted from server: render alert onto screen
 socket.on('disconnect-client', ()=>{
   const html = Mustache.render(messageTemplate, {
-    username: 'skrobbl bot!!!',
+    username: 'SKROBBL',
     text: 'A player has disconnected'
   })
   $messageContainer.insertAdjacentHTML('beforeend', html)
@@ -162,26 +184,20 @@ socket.on('update-ready-button', ({ready, needed})=>{
   $readyButton.innerHTML = `${ready}/${needed} ready`
 })
 
-socket.on('end-round', ()=>{
-  //alert('round ended!')
+socket.on('end-round', ({players, word})=>{
+  resetUI()
 
-  //reset all buttons
-  for(let i =0; i < $hintButtons.length; i++){
-    $hintButtons[i].disabled = true
-    $hintButtons[i].style.backgroundColor = '#C3D8DA'
-    $hintButtons[i].style.innerHTML =''
-    $hintButtons[i].style.opacity = '0.5'
-  }
-
-  //verbal hint reset
+  //show round end on hint container
   const roundEndedHTML = `<div class = "round-status-bg">
                             <p class = "round-status-text">NEW ROUND</p>
                           </div>`
   $hintContainer.insertAdjacentHTML('beforeend', roundEndedHTML)
-  $verbalHintSend.style.display = 'none';
+  let html = `<p style = "bold">The word was ${word}</p><p>Current leaderboard:</p>`
 
-  socket.emit('enable-chat')
-
+  for(let i = 0; i<players.length; i++){
+    html += `${players[i]}<br/>`
+  }
+  notification('Round has ended!', html, 0)
 })
 
 //you're the typer faaaaaam (choose a word)
@@ -306,22 +322,42 @@ socket.on('update-hints', (hint)=>{
   $helperMsg.innerHTML = 'message sent!'
 })
 
-const createNotification = (text)=>{
-  //animate
-  /*
-  let lol = 0;
-  setInterval(()=>{
-    lol+=1
-    $notifBox.style.top = lol + "px"
-  }, 10)*/
-
-  document.getElementById('notif-text').innerHTML = text
-  $notifBox.style.display = 'block'
-}
-
-
 //-------------------misc?----------------------------------------------
+socket.on('end-game', ({players, word})=>{
+  resetUI()
 
+  //show round end on hint container
+  const roundEndedHTML = `<div class = "round-status-bg">
+                              <p class = "round-status-text">GAME ENDED</p>
+                            </div>`
+  $hintContainer.insertAdjacentHTML('beforeend', roundEndedHTML)
+  let html = `<p style = "bold">The word was ${word}</p><p>Remaining leaderboard:</p>`
+
+  for(let i = 1; i<players.length; i++){
+    html += `${players[i]}<br/>`
+  }
+  notification(`${players[0]} wins!`, html, 1)
+
+  $readyButton.text = 'PLAY AGAIN'
+  $readyButton.disabled = false
+})
+const resetUI = ()=>{
+  //reset header thing _ __ _ __ _ _ _
+  document.getElementById('word').innerHTML = ""
+  //reset all buttons
+  for(let i =0; i < $hintButtons.length; i++){
+    $hintButtons[i].disabled = true
+    $hintButtons[i].style.backgroundColor = '#C3D8DA'
+    $hintButtons[i].style.innerHTML =''
+    $hintButtons[i].style.opacity = '0.5'
+  }
+
+  //verbal hint reset
+  $verbalHintSend.style.display = 'none';
+
+  //show scoreboard
+  socket.emit('enable-chat')
+}
 //start timer for round end ****** NOT DONE!
 const startTimer = ()=>{
   const $timer = document.getElementById('timer')

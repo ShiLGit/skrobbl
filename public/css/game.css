@@ -163,7 +163,7 @@ h1{
 }
 #helper-bar{
   margin-top: 0px;
-  background-color: #E87461;
+  background-color: #C3D898;
   width: 100%;
 
   opacity: 0.8;
@@ -237,9 +237,17 @@ h1{
   font-family: Lexend Deca;
 }
 #send-message button{
-  background-color: #DB162F;
-  border: 2px solid #B41327;
+  background-color: #368F8B;
+  border: 2px solid #2D7672;
   font-family: Lexend Deca;
+}
+.msg-text{
+  font-size: 13px;
+  line-height: 1;
+}
+h4{
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 /*SCOREBOARD------------------------------------------------------------------*/
@@ -316,19 +324,42 @@ h1{
 
 /*NOTIFICATIONS---------------------------------------------------------------*/
 #notif{
+  display: none;
+
   position: absolute;
-  top: 0px;
   z-index: 1;
-  margin-left: 40%;
+  margin-left: 30%;
   padding: 20px;
+  top: 30%;
 
   background-color: white;
-  height: 150px;
-  width: 300px;
+  height: 50%;
+  width: 30%;
+
+  font-family: Lexend Deca;
+  text-align: center;
+  box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.5);
+}
+#notif h6{
+  position: absolute;
+  bottom: 0px;
+  margin: 0px 20% 5px 23%;
 }
 /*INSTANTIATED----------------------------------------------------------------*/
 .msg-bg{
   background-color: ivory;
+  font-family: Lexend Deca;
+  overflow: hidden;
+
+  padding: 10px;
+  margin-top: 10px;
+  font-family: Lexend Deca;
+  line-height: 0.5;
+}
+
+.speshul{
+  color:#809848;
+  background-color:ivory;
   font-family: Lexend Deca;
   overflow: flex;
 

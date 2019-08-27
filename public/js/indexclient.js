@@ -56,6 +56,9 @@ $send.onclick = ()=>{
   else if ($username.value.indexOf('=') !== -1 ||$username.value.indexOf('&') !==-1){
     return alert('Bad input: username contains illegal characters. (= and/or &)')
   }
+  else if ($username.value === "SKROBBL"){
+    return alert('Bad input: stop pretending to be skrobbl!!')
+  }
   const joinOption = document.querySelector('input[name="join-option"]:checked').value
 
   //errorheck for room-creators

@@ -81,7 +81,13 @@ io.on('connection', (socket)=>{ //listener for all socket events
       return acknowledge('Error: room is already full (8 players)')
     }
     socket.join(newplayer.roomName)
-    socket.broadcast.to(newplayer.roomName).emit('message-client', {username: 'SKROBBL BOT', text: `${newplayer.username} has joined the room.`})
+    socket.broadcast.to(newplayer.roomName).emit('message-client', {username: 'SKROBBL', text: `${newplayer.username} has joined the room.`})
+
+    if(gameplay.getRoomWord(newplayer.roomName) === undefined){
+      socket.emit('message-client', {username: 'Welcome to skrobbl!', text: 'The game will start when all players have clicked the "ready" button.'})
+    }else{
+      socket.emit('message-client', {username: 'Welcome to skrobbl!', text: 'The game has already started - wait until next round to participate.'})
+    }
     io.to(newplayer.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(newplayer.roomName))
 
     acknowledge()
@@ -97,11 +103,11 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
     if(gameplay.isRoomWord(message, player.roomName) === true){
       const flag = gameplay.updateScore(player.roomName, player.username)
-      io.to(player.roomName).emit('message-client', {username: 'SKROBBL BOT', text: `${player.username} has guessed the werd!`})
+      io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has guessed the werd!`})
 
       if(flag === 0){
         console.log('time to end tha round!!!!!!')
-        io.to(player.roomName).emit('end-round')
+        io.to(player.roomName).emit('end-round', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
         startRound()
 
       }
@@ -130,7 +136,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
       startRound()
     }
     io.to(player.roomName).emit('update-ready-button', {ready,needed})
-    io.to(player.roomName).emit('message-client', {username: 'SKROBBL BOT', text: `${player.username} is ready!`} )
+    io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} is ready!`} )
   })
 
 //--------------------*1) CHOOSING WORDS
@@ -168,14 +174,15 @@ io.on('connection', (socket)=>{ //listener for all socket events
     const player = players.getPlayer(socket.id)
     const typerid = gameplay.chooseTyper(player.roomName)
     if(typerid === undefined){
-        return console.log('game haz ended fam')
+        console.log('game haz ended fam')
+        return io.to(player.roomName).emit('end-game', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
     }
 
     console.log('typer id: ' + typerid)
     const typer = players.getPlayer(typerid).username
 
     io.to(typerid).emit('typer')
-    io.to(player.roomName).emit('message-client', {username: 'SKROBBL BOT', text: `${typer} is the typer!`})
+    io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${typer} is the typer!`})
   }
 
 //----------------------GIVING HINTS --------------------------------------------
@@ -204,7 +211,6 @@ io.on('connection', (socket)=>{ //listener for all socket events
     })
 
     gameplay.updateNumHints(player.roomName, player.username)
-
   })
 
 //----------------------2) RESETTING ROUNDS
