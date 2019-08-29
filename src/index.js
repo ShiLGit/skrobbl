@@ -102,7 +102,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
     }
 
     if(gameplay.isRoomWord(message, player.roomName) === true){
-      const flag = gameplay.updateScore(player.roomName, player.username)
+      const flag = gameplay.updateScore(player.roomName, player.username, 'guesser')
       io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has guessed the werd!`})
 
       if(flag === 0){
@@ -164,6 +164,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
   socket.on('word-chosen', (word)=>{
     player = players.getPlayer(socket.id)
     gameplay.updateRoomWord(player.roomName, word)
+    gameplay.startTimer()
     io.to(player.roomName).emit('update-word', word)
     disableChat = true
   })
@@ -215,7 +216,6 @@ io.on('connection', (socket)=>{ //listener for all socket events
   })
 
 //----------------------2) RESETTING ROUNDS
-
 })//EVERYTHING HAS TO BE NESTED INSIDE CONNECTION EVENT!!!!!!!
 
 server.listen(port, ()=>{

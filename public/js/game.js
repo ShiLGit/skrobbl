@@ -85,10 +85,10 @@ const attemptJoin = ()=>{
   const joinReq = parseQS()
 
   //remove qs from url
-  const uri = window.location.toString();
-  if (uri.indexOf("game.html") > 0) {
-      const clean_uri = uri.substring(0, uri.indexOf("game.html"));
-      window.history.replaceState({}, document.title, clean_uri);
+  const url = window.location.toString();
+  if (url.indexOf("game.html") > 0) {
+      const newUrl = url.substring(0, url.indexOf("game.html"));
+      window.history.replaceState({}, document.title, newUrl);
   }
   const player = {
     roomName: joinReq.roomName,
@@ -101,7 +101,7 @@ const attemptJoin = ()=>{
       location.href = '/'
     }
     else{
-      socket.emit('join', player,  (errAck)=>{//name already exists (join calls player.addPlayer())
+      socket.emit('join', player, (errAck)=>{//name already exists (join calls player.addPlayer())
         if(errAck){
             alert(errAck)
             location.href= '/'
@@ -173,6 +173,7 @@ socket.on('disconnect-client', ()=>{
     text: 'A player has disconnected'
   })
   $messageContainer.insertAdjacentHTML('beforeend', html)
+  $messageContainer.scrollTop = $messageContainer.scrollHeight
 })
 
 //*************************STARTING THE GAME ****************************************
@@ -193,10 +194,11 @@ socket.on('end-round', ({players, word})=>{
                             <p class = "round-status-text">NEW ROUND</p>
                           </div>`
   $hintContainer.insertAdjacentHTML('beforeend', roundEndedHTML)
+  $hintContainer.scrollTop = $hintContainer.scrollHeight
   let html = `<p style = "bold">The word was ${word}</p><p>Current leaderboard:</p>`
 
   for(let i = 0; i<players.length; i++){
-    html += `${players[i]}<br/>`
+    html += `${players[i].name}: ${players[i].score}pts<br/>`
   }
   notification('Round has ended!', html, 0)
 })
@@ -227,30 +229,34 @@ for (let i = 0; i < $wordButtons.length; i++) {
 //render header hint (_ _ _ _ _ ...) on your screen
 socket.on('update-word', (secretWord)=>{
   const word = secretWord.toUpperCase()
-  let toPrint = ""
-  let toDisplay = [word.length]
-  let numLetters = Math.ceil(word.length*0.3)
-  const indexIncrement = Math.floor((word.length/numLetters))
-  let letterIndex = indexIncrement
 
   //header text calculate
-  for(let i = 0; i<word.length; i++){
-    if(i === letterIndex && numLetters > 0){
-      numLetters--
-      toDisplay[i] = word[letterIndex]
-      letterIndex += indexIncrement;
-      if(letterIndex > word.length-1){
-        letterIndex -= word.length
-        toDisplay[letterIndex] = word[letterIndex]
-      }
-    }else{
-      toDisplay[i] = '_'
-    }
-    toPrint = toPrint.concat(toDisplay[i])
+  let chars = []
+  let letterCount = Math.ceil(word.length * 0.3)
+  const incrementSize = Math.floor(word.length / letterCount)
+  let revealIndex = incrementSize
+  let toPrint = ""
+
+  for(i = 0; i < word.length; i++){
+    chars[i] = '_ '
   }
+
+  do{
+    if(revealIndex > word.length - 1){
+      revealIndex -= word.length
+    }
+    chars[revealIndex] = word[revealIndex]
+    revealIndex += incrementSize
+    letterCount--
+  }while(letterCount > 0)
+
+  for(let i = 0; i<word.length; i++){
+    toPrint += chars[i] + ' '
+  }
+
   //change header text
   const $header = document.getElementById('word').innerHTML = toPrint
-  //startTimer()
+  revealTimer()
 })
 
 //RENDER HINT BUTTON WORDS
@@ -320,6 +326,7 @@ document.getElementById('hint').onclick = (e)=>{
 socket.on('update-hints', (hint)=>{
   const html = Mustache.render(hintTemplate, {text: "HINT: " + hint})
   $hintContainer.insertAdjacentHTML('beforeend', html)
+  $hintContainer.scrollTop = $hintContainer.scrollHeight
   $helperMsg.innerHTML = 'message sent!'
 })
 
@@ -332,14 +339,22 @@ socket.on('end-game', ({players, word})=>{
                               <p class = "round-status-text">GAME ENDED</p>
                             </div>`
   $hintContainer.insertAdjacentHTML('beforeend', roundEndedHTML)
+  $hintContainer.scrollTop = $hintContainer.scrollHeight
   let html = `<p style = "bold">The word was ${word}</p><p>Remaining leaderboard:</p>`
 
   for(let i = 1; i<players.length; i++){
-    html += `${players[i]}<br/>`
+    html += `${players[i].name}: ${players[i].score}pts<br/>`
   }
-  notification(`${players[0]} wins!`, html, 1)
+  notification(`${players[0].name} wins!`, html, 1)
 
+  const htmlMsg =
+        `<div class = "speshul">
+          <h4 class = "username">SKROBBL</h4>
+          <p class = "msg-text">${players[0].name} wins! Press 'PLAY AGAIN' to play another game.</p>
+        </div>`
 
+  $messageContainer.insertAdjacentHTML('beforeend', htmlMsg)
+  $messageContainer.scrollTop = $messageContainer.scrollHeight
   $readyButton.innerHTML = 'PLAY AGAIN'
   $readyButton.disabled = false
 })
@@ -361,15 +376,15 @@ const resetUI = ()=>{
   socket.emit('enable-chat')
 }
 //start timer for round end ****** NOT DONE!
-const startTimer = ()=>{
+const revealTimer = ()=>{
   const $timer = document.getElementById('timer')
   let time = 30
-  let timer = setInterval(()=>{
-    time--
-    $timer.innerHTML = "Time left: " + time + "s"
+  const timer = setInterval(()=>{
+    $timer.innerHTML = `Time until letter reveal: ${--time}`
+
     if(time <= 0){
+      letterReveal()* 1
       clearInterval(timer)
     }
-  }, 1000)
-
+  },1000)
 }

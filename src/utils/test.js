@@ -1,54 +1,24 @@
-const rooms = [{name: 'dawg', players: [
-  {
-    username: 'Wakanda',
-    score: 12
-  },
-  {
-    username: 'JIdoaij',
-    score: 13
-  },
-  {
-    username: 'first place',
-    score: 90000
-  },
-  {
-    username: 'second',
-    score: 41
-  }
-]}]
 
 
-const orderScores = (roomName)=>{
-  try{
-    const room = rooms.find((ele)=>{
-      return ele.name === roomName
-    })
+let chars = []
+let letterCount = Math.ceil(word.length * 0.3)
+const incrementSize = Math.floor(word.length / letterCount)
+let revealIndex = incrementSize
+let toPrint = ""
 
-    //insertion sort because array will always b small!!!
-    let players = [...room.players]
-    let toReturn = []
-    let length = players.length
-
-    for(let i = 0; i < length; i++){
-      //find max in remaining array
-      let max = -1
-      for(let j = 0; j < players.length; j++){
-        if(max < players[j].score){
-          max = players[j].score
-          maxIndex = j
-        }
-      }
-      //remove max val from players array;
-      console.log('max: ', players[maxIndex], maxIndex)
-      toReturn.push(players[maxIndex].username)
-      console.log('remaining array: ', players)
-      players.splice(maxIndex, 1)
-    }
-    return toReturn
-  }catch(e){
-    console.log(e)
-    return null
-  }
+for(i = 0; i < word.length; i++){
+  chars[i] = '_ '
 }
 
-console.log(orderScores('dawg'))
+do{
+  if(revealIndex > word.length - 1){
+    revealIndex -= word.length
+  }
+  chars[revealIndex] = word[revealIndex]
+  revealIndex += incrementSize
+  letterCount--
+}while(letterCount > 0)
+
+for(let i = 0; i<word.length; i++){
+  toPrint += chars[i] + ' '
+}

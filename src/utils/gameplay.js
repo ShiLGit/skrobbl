@@ -1,10 +1,5 @@
 //this module is for keeping track of what's going on in each room during gameplay (keeps player objects with more in-game info, groups players into rooms)
 const rooms = []
-//[{roomname, players}, {roomname2, players2} ...]
-/*
-TO BE RESOLVED
--multiplyer: what if a player leaves the room during round?
-*/
 
 //add player to room or create room if dne yet
 const updateRoom = (roomName, newplayer)=>{
@@ -95,7 +90,7 @@ const updateRoomWord = (roomName, word) =>{
     return ele.name === roomName
   })
   room.word = word
-  room.multiplyer = room.players.length - 1 //this is the # of players that are guessing NOTE: WHAT IF A PLAYER LEAVES MID ROUND?
+  room.multiplyer = room.players.length - 1 //this is the # of players that are guessing
   console.log('post update: ', room)
 }
 
@@ -116,7 +111,7 @@ const isRoomWord = (word, roomName) =>{
 }
 
 //update player score upon guessing correct word :: NOTE RETURNING 0 >>> NO USERS LEFT FOR GUESSING
-const updateScore = (roomName, username)=>{
+const updateScore = (roomName, username, role)=>{
   const room = rooms.find((ele)=>{
     return ele.name === roomName
   })
@@ -124,20 +119,24 @@ const updateScore = (roomName, username)=>{
   const player = room.players.find((ele)=>{
     return ele.username === username
   })
-  if(Math.ceil(room.multiplyer/2) > 0){
-    player.score += 100* room.multiplyer
+  if(role === 'guesser'){
+    if(Math.floor(room.multiplyer/2) > 0){
+      player.score += 100* room.multiplyer
+    }
+    else{
+      player.score += 100
+    }
+    room.multiplyer--
 
+    console.log('after score update:', room)
+    if(room.multiplyer <= 0){
+      return 0
+    }
+  }else if (role === 'typer'){
+    console.log('sad.')
   }
-  else{
-    player.score += 100
-  }
-  room.multiplyer--
 
-  console.log('after score update:', room)
-  if(room.multiplyer <= 0){
-    return 0
-  }
-  return room.muliplyer
+  return room.multiplyer
 }
 
 //update number of hints the typer has given (for calculating score:: NEED TO FACTOR IN WORDS IN HINTS!!)
@@ -185,7 +184,7 @@ const roomReady= (roomName)=>{
   return {ready: room.ready, needed: room.players.length}
 }
 
-//return all roomnames + population
+//return all roomnames + their population
 const allRooms = ()=>{
   const roomlist = []
 
@@ -217,7 +216,7 @@ const orderScores = (roomName)=>{
         }
       }
       //remove max val from players array;
-      toReturn.push(players[maxIndex].username)
+      toReturn.push({name: players[maxIndex].username, score: players[maxIndex].score})
       players.splice(maxIndex, 1)
     }
     return toReturn
@@ -248,6 +247,14 @@ const resetRoom = (roomName)=>{
     return null
   }
 }
+/*timer for word reveals: not on index.js because if socket that timer is on closes, then timer disappears for whole room; not on clientside because waste to have all room members
+make req when timer runs out*/
+const startTimer = (roomName)=>{
+  const room = rooms.find((ele)=>{return ele.name === roomName})
+  setInterval(()=>{
+    console.log('wopwopwop')
+  }, 10000)
+}
 module.exports = {
   updateRoom,
   removePlayerFromRoom,
@@ -261,5 +268,6 @@ module.exports = {
   roomReady,
   allRooms,
   orderScores,
-  resetRoom
+  resetRoom,
+  startTimer
 }

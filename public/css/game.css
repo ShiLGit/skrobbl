@@ -112,9 +112,10 @@ h1{
 #hint-array button{
   height: 15%;
   width: 25%;
+  color: white;
 
-  background-color: #C3D8DA;
-  opacity: 0.5;
+  background-color: #160F29;
+  opacity: 0.8;
   border: none;
   transition: 0.4s;
   font-family: Lexend Deca;
@@ -194,6 +195,9 @@ h1{
   background-color: #2F3061;
   border: 2px solid #272850;
   width: 15%;
+}
+.hints-wrapper h3{
+  font-family: Lexend Deca;
 }
 
 .hint-bg{
