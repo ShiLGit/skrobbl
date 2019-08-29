@@ -1,3 +1,7 @@
+
+//IIFE BECAUSE OF A SINGLE STOOOOOOOOOPID GLOBAL TIEMR
+(function() {
+'use strict';
 const socket = io() //connect
 
 //const $notifBox = document.getElementById('notif')
@@ -18,39 +22,16 @@ const $hintButtons = [document.getElementById('hb1'),document.getElementById('hb
                       document.getElementById('hb7'),document.getElementById('hb8'),document.getElementById('hb9'),
                       document.getElementById('hb10'),document.getElementById('hb11'),document.getElementById('hb12')]
 const $notifBox = document.getElementById('notif')
+const $word = $word
 
 const messageTemplate = document.getElementById('message-template').innerHTML
 const hintTemplate = document.getElementById('hint-template').innerHTML
 const allAvatars = ['../img/avatar_1.png', '../img/avatar_2.png', '../img/avatar_3.png', '../img/avatar_4.png','../img/avatar_5.png', '../img/avatar_6.png']
+let timer = null;
 
-//*******************************FUNKI CSS NOTIFICATIONS
-$notifBox.onclick = ()=>{
-  $notifBox.style.display = 'none'
-}
+//********************CUSTOM FUNCTIONS***************************************
 
-//create a notification
-const notification = (titleText, bodyText, special)=>{
-  const $title = document.getElementById('notif-header')
-  const $body = document.getElementById('notif-body')
-  $notifBox.style.backgroundColor = 'white'
-
-  let timeout = 6000
-
-  $title.innerHTML = titleText
-  $body.innerHTML = bodyText
-
-  //create game-end notification if special = 1
-  if(special === 1){
-    $notifBox.style.backgroundColor = '#F9DBBD'
-    timeout = 20000
-  }
-  $notifBox.style.display = 'block'
-  setTimeout(()=>{
-    $notifBox.style.display = 'none'
-  }, timeout)
-}
-
-//****************************STEP 1: JOIN ROOM ************************************
+//--------------JOINING THE ROOM ----------------
 //parse querystring to create user object
 function parseQS(){
   let qs = location.search
@@ -115,6 +96,79 @@ const attemptJoin = ()=>{
   })
 }
 
+//----------------------WORD BLANK TIMER + NOTIFICATIONS
+//header text calculate
+const generateBlanks = (word)=>{
+  let chars = []
+  let letterCount = Math.ceil(word.length * 0.3)
+  const incrementSize = Math.floor(word.length / letterCount)
+  let revealIndex = incrementSize
+  let toPrint = ""
+
+  for(let i = 0; i < word.length; i++){
+    chars[i] = '_ '
+  }
+
+  do{
+    if(revealIndex > word.length - 1){
+      revealIndex -= word.length
+    }
+    chars[revealIndex] = word[revealIndex]
+    revealIndex += incrementSize
+    letterCount--
+  }while(letterCount > 0)
+
+  for(let i = 0; i<word.length; i++){
+    toPrint += chars[i] + ' '
+  }
+}
+
+//start timer for letter revealing
+const revealTimer = (word)=>{
+  word = secretWord.toUpperCase()
+  const $timer = document.getElementById('timer')
+  let time = 30
+
+  timer = setInterval(()=>{
+    $timer.innerHTML = `Time until letter reveal: ${--time}`
+
+    if(time <= 0){
+      //letterReveal
+      const shown = $word.innerHTML
+      console.log(shown)
+
+      clearInterval(timer)
+    }
+  },1000)
+}
+$notifBox.onclick = ()=>{
+  $notifBox.style.display = 'none'
+}
+
+//create a notification
+const notification = (titleText, bodyText, special)=>{
+  const $title = document.getElementById('notif-header')
+  const $body = document.getElementById('notif-body')
+  $notifBox.style.backgroundColor = 'white'
+
+  let timeout = 6000
+
+  $title.innerHTML = titleText
+  $body.innerHTML = bodyText
+
+  //create game-end notification if special = 1
+  if(special === 1){
+    $notifBox.style.backgroundColor = '#F9DBBD'
+    timeout = 20000
+  }
+  $notifBox.style.display = 'block'
+  setTimeout(()=>{
+    $notifBox.style.display = 'none'
+  }, timeout)
+}
+
+//****************************STEP 1: JOIN ROOM ************************************
+
 //populate sidebar with player info
 socket.on('populate-sidebar', (players)=>{
   let i = 0;
@@ -132,6 +186,7 @@ socket.on('populate-sidebar', (players)=>{
     $players[j].style.display = "none"
   }
 })
+
 attemptJoin()
 //******************************* BASIC MESSAGING ***************************************
 $sendButton.onclick = (e)=>{
@@ -188,7 +243,7 @@ socket.on('update-ready-button', ({ready, needed})=>{
 
 socket.on('end-round', ({players, word})=>{
   resetUI()
-
+  clearInterval(timer)
   //show round end on hint container
   const roundEndedHTML = `<div class = "round-status-bg">
                             <p class = "round-status-text">NEW ROUND</p>
@@ -230,33 +285,9 @@ for (let i = 0; i < $wordButtons.length; i++) {
 socket.on('update-word', (secretWord)=>{
   const word = secretWord.toUpperCase()
 
-  //header text calculate
-  let chars = []
-  let letterCount = Math.ceil(word.length * 0.3)
-  const incrementSize = Math.floor(word.length / letterCount)
-  let revealIndex = incrementSize
-  let toPrint = ""
-
-  for(i = 0; i < word.length; i++){
-    chars[i] = '_ '
-  }
-
-  do{
-    if(revealIndex > word.length - 1){
-      revealIndex -= word.length
-    }
-    chars[revealIndex] = word[revealIndex]
-    revealIndex += incrementSize
-    letterCount--
-  }while(letterCount > 0)
-
-  for(let i = 0; i<word.length; i++){
-    toPrint += chars[i] + ' '
-  }
-
   //change header text
-  const $header = document.getElementById('word').innerHTML = toPrint
-  revealTimer()
+  const $header = $word.innerHTML = generateBlanks(word)
+  revealTimer(secretWord)
 })
 
 //RENDER HINT BUTTON WORDS
@@ -360,7 +391,7 @@ socket.on('end-game', ({players, word})=>{
 })
 const resetUI = ()=>{
   //reset header thing _ __ _ __ _ _ _
-  document.getElementById('word').innerHTML = ""
+  $word.innerHTML = ""
   //reset all buttons
   for(let i =0; i < $hintButtons.length; i++){
     $hintButtons[i].disabled = true
@@ -375,16 +406,6 @@ const resetUI = ()=>{
   //show scoreboard
   socket.emit('enable-chat')
 }
-//start timer for round end ****** NOT DONE!
-const revealTimer = ()=>{
-  const $timer = document.getElementById('timer')
-  let time = 30
-  const timer = setInterval(()=>{
-    $timer.innerHTML = `Time until letter reveal: ${--time}`
 
-    if(time <= 0){
-      letterReveal()* 1
-      clearInterval(timer)
-    }
-  },1000)
-}
+
+}());//end of iife

@@ -164,7 +164,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
   socket.on('word-chosen', (word)=>{
     player = players.getPlayer(socket.id)
     gameplay.updateRoomWord(player.roomName, word)
-    gameplay.startTimer()
+    gameplay.startTimer(player.roomName)
     io.to(player.roomName).emit('update-word', word)
     disableChat = true
   })

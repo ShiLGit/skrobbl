@@ -21,7 +21,9 @@ const updateRoom = (roomName, newplayer)=>{
           numHints: 0
         }
       ],
-      ready: 0
+      ready: 0,
+      timer: null,
+      pointDebuff: 1
     }
 
     rooms.push(newRoom)
@@ -90,7 +92,7 @@ const updateRoomWord = (roomName, word) =>{
     return ele.name === roomName
   })
   room.word = word
-  room.multiplyer = room.players.length - 1 //this is the # of players that are guessing
+  room.numGuessers = room.players.length - 1 //this is the # of players that are guessing
   console.log('post update: ', room)
 }
 
@@ -119,24 +121,22 @@ const updateScore = (roomName, username, role)=>{
   const player = room.players.find((ele)=>{
     return ele.username === username
   })
-  if(role === 'guesser'){
-    if(Math.floor(room.multiplyer/2) > 0){
-      player.score += 100* room.multiplyer
-    }
-    else{
-      player.score += 100
-    }
-    room.multiplyer--
 
-    console.log('after score update:', room)
-    if(room.multiplyer <= 0){
+  if(role === 'guesser'){
+    if(Math.ceil(room.numGuessers/2) > 0){
+      player.score += 100* room.numGuessers * room.pointDebuff
+    }
+    room.numGuessers--
+
+    if(room.numGuessers <= 0){
       return 0
     }
   }else if (role === 'typer'){
-    console.log('sad.')
+    player.score += Math.ceil((room.players.length - 1 -numGuessers) * room.pointDebuff)
   }
+  console.log('after score update:', room)
 
-  return room.multiplyer
+  return room.numGuessers
 }
 
 //update number of hints the typer has given (for calculating score:: NEED TO FACTOR IN WORDS IN HINTS!!)
@@ -189,7 +189,7 @@ const allRooms = ()=>{
   const roomlist = []
 
   for(let i = 0; i < rooms.length; i++){
-    roomlist.push({name: rooms[i].name, numPlayers: rooms[i].players.length})
+    roomlist.push({name: rooms[i].name, numGuessers: rooms[i].players.length})
   }
   return roomlist
 }
@@ -251,9 +251,23 @@ const resetRoom = (roomName)=>{
 make req when timer runs out*/
 const startTimer = (roomName)=>{
   const room = rooms.find((ele)=>{return ele.name === roomName})
-  setInterval(()=>{
-    console.log('wopwopwop')
+  let lettersLeft = room.word.length - Math.ceil(room.word.length * 0.3) //Math.ceil...*0.3 is from gameplay.js' blank-caluclationsion!
+  room.pointDebuff = 1.0
+
+  room.timer = setInterval(()=>{
+    lettersLeft--
+    room.pointDebuff = lettersLeft/room.word.length + 0.5
+    if(lettersLeft <= 0){
+      clearInterval(room.timer)
+    }
+    console.log('NEW DEBUFF: ', room, lettersLeft)
   }, 10000)
+}
+//stops timer for a room
+const stopTimer = (roomName)=>{
+  const room = rooms.find((ele)=>{return ele.name === roomName})
+  clearInterval(room.timer)
+  room.pointDebuff = 0
 }
 module.exports = {
   updateRoom,
@@ -269,5 +283,6 @@ module.exports = {
   allRooms,
   orderScores,
   resetRoom,
-  startTimer
+  startTimer,
+  stopTimer
 }
