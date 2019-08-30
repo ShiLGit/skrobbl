@@ -39,11 +39,12 @@ io.on('connection', (socket)=>{ //listener for all socket events
     }else if(removeStatus === -1){//if the typer has left, start the next round
       io.to(player.roomName).emit('end-round', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
 
-      //copy pasted from choseTyper() because it doesn't have access to player when called from startRound()
+      //copy pasted from chooseTyper() because it doesn't have access to player when called from startRound()
       const typerid = gameplay.chooseTyper(player.roomName)
       if(typerid === undefined){
           console.log('game haz ended fam')
           io.to(player.roomName).emit('end-game', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
+          return gameplay.resetRoom(player.roomName)
       }
       console.log('typer id: ' + typerid)
       const typer = players.getPlayer(typerid).username

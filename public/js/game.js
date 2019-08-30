@@ -32,11 +32,11 @@ let timer = null;
 //********************CUSTOM FUNCTIONS***************************************
 
 //--------------JOINING THE ROOM ----------------
+//replace char in 'str' at index of 'index' with 'char' (LOL!!!!!!!!!!!!!)
 const replaceAt=(str, index, char)=>{
   let toReturn = ""
   for(let i = 0; i < str.length; i++){
     if(i === index){
-      console.log('ditekcted')
       toReturn += char
     }else{
       toReturn += str[i]
@@ -160,6 +160,12 @@ const revealTimer = (word)=>{
             newHTML = replaceAt(newHTML, i, fullWord[i])
             $word.innerHTML = newHTML
             time = 10
+
+            //whole word has been revealed
+            if(newHTML.indexOf('_') === -1){
+              notification('YOURE ALL TRASH', 'YOURE ALL TRASH')
+              clearInterval(timer)
+            }
             break
           }
         }
@@ -171,12 +177,15 @@ const revealTimer = (word)=>{
             console.log('new: ', newHTML)
             $word.innerHTML = newHTML
             time = 10
+
+            //whole word has been revealed
+            if(newHTML.indexOf('_') === -1){
+              notification('YOURE ALL TRASH', 'YOURE ALL TRASH')
+              clearInterval(timer)
+            }
             break
           }
         }
-      }else{//this will execute if there are no blanks left to fill
-
-        clearInterval(timer)
       }
     }
   },1000)

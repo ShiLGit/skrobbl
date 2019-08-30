@@ -1,5 +1,18 @@
 //this module is for keeping track of what's going on in each room during gameplay (keeps player objects with more in-game info, groups players into rooms)
 const rooms = []
+/*SINCE OBJECTS IN ROOM[] ARE GETTING LONG...
+  name: name of room - always all uppercase
+  players: array of all players in room
+    typeStatus: if player has been typer or not; for finding typer of next round/deciding if game has ended
+    numHints: number of hints a player has given - modifier for their point gain as the typer (gets reset by resetScores)
+  ready: number of players that have clicked the ready button - roomReady() tells index.js if all players are ready (>>>start game)using this property
+  timer: timer that decreases pointDebuff as more letters are revealed; stopped at end of every round, started when typer picks a word
+  pointDebuff: score modifier for everyone (multiply by score)
+  currentTyper: socketid of current typer- for deciding if typer has left and for finding the typer to update score of at end of each round
+
+APPENDED PROPERTIES:
+  numGuessers: #of players in room that are eligible to guess; decided at start of each round.
+*/
 
 //add player to room or create room if dne yet
 const updateRoom = (roomName, newplayer)=>{
@@ -45,7 +58,6 @@ const updateRoom = (roomName, newplayer)=>{
 
 //delete player, autodelete room if leaving player is last player of room; RETURN MEANINgS: 1 - room is gone, 0 - room still exists, -1 - typer has left
 const removePlayerFromRoom = (username, roomName) =>{
-  console.log('tha fak')
   let roomIndex = 0
   try{//room is sometimes === undefined when many players instantaneously disconnect, which will throw error
     const room = rooms.find((ele)=>{
@@ -128,7 +140,7 @@ const updateScore = (roomName, username, role)=>{
     const player = room.players.find((ele)=>{
       return ele.username === username
     })
-    if(Math.ceil(room.numGuessers/2) > 0){
+    if(Math.floor(room.numGuessers/2) > 0){
       player.score += Math.round(100* room.numGuessers * room.pointDebuff)
     }
     room.numGuessers--
@@ -142,7 +154,7 @@ const updateScore = (roomName, username, role)=>{
     })
     console.log('typer found:', typer)
     if(typer != undefined){
-      typer.score += Math.round((room.players.length-1 - room.numGuessers)*75*room.pointDebuff)
+      typer.score += Math.round((room.players.length-1 - room.numGuessers)*75*room.pointDebuff*((15-numHints)/15))
     }
   }
   console.log('after score update:', room)
@@ -200,7 +212,7 @@ const allRooms = ()=>{
   const roomlist = []
 
   for(let i = 0; i < rooms.length; i++){
-    roomlist.push({name: rooms[i].name, numGuessers: rooms[i].players.length})
+    roomlist.push({name: rooms[i].name, numPlayers: rooms[i].players.length})
   }
   return roomlist
 }
@@ -258,11 +270,15 @@ const startTimer = (roomName)=>{
   let lettersLeft = room.word.length - Math.ceil(room.word.length * 0.3) //Math.ceil...*0.3 is from gameplay.js' blank-caluclationsion!
   room.pointDebuff = 1.0
 
+  if(room.word === undefined){
+    return
+  }
   room.timer = setInterval(()=>{
     lettersLeft--
     room.pointDebuff = lettersLeft/room.word.length
     if(lettersLeft <= 0){
       clearInterval(room.timer)
+      console.log(`timer for ${roomName} cleared.`)
     }
   }, 10000)
 }
@@ -273,7 +289,7 @@ const stopTimer = (roomName)=>{
   room.pointDebuff = 1.0
 }
 
-//reset room points
+//reset room points, typestatus, numhints: done before rounds are started/restarted
 const resetScores = (roomName)=>{
   const room = rooms.find((ele)=>{
     return ele.name === roomName
