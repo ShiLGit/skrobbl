@@ -28,11 +28,29 @@ io.on('connection', (socket)=>{ //listener for all socket events
     if(!toRemove){
       return console.log('FROM DISCONNECT: nothing to remove')
     }
-    const deleted = gameplay.removePlayerFromRoom(toRemove.username, toRemove.roomName)
+    //remove player from gameplay.js and players.js
+    const removeStatus = gameplay.removePlayerFromRoom(toRemove.username, toRemove.roomName)
+    console.log('rmstat:', removeStatus)
     const player = players.removePlayer(socket.id)
 
-    if(deleted === true){//if all players of room have left..
+    //SPESHUL CASES OF DISCONNECTS
+    if(removeStatus === 1){//if all players of room have left..
       return
+    }else if(removeStatus === -1){//if the typer has left, start the next round
+      io.to(player.roomName).emit('end-round', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
+
+      //copy pasted from choseTyper() because it doesn't have access to player when called from startRound()
+      const typerid = gameplay.chooseTyper(player.roomName)
+      if(typerid === undefined){
+          console.log('game haz ended fam')
+          io.to(player.roomName).emit('end-game', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
+      }
+      console.log('typer id: ' + typerid)
+      const typer = players.getPlayer(typerid).username
+
+      io.to(typerid).emit('typer')
+      io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: 'Current typer has left the game! (What a jerk!!!!!!!!!!!). Starting next round...'})
+      io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${typer} is the typer!`})
     }
     io.to(player.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(player.roomName))
 

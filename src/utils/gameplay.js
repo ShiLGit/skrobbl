@@ -43,8 +43,9 @@ const updateRoom = (roomName, newplayer)=>{
   }
 }
 
-//delete player, autodelete room if leaving player is last player of room; return true for room is gone, false for room still exists
+//delete player, autodelete room if leaving player is last player of room; RETURN MEANINgS: 1 - room is gone, 0 - room still exists, -1 - typer has left
 const removePlayerFromRoom = (username, roomName) =>{
+  console.log('tha fak')
   let roomIndex = 0
   try{//room is sometimes === undefined when many players instantaneously disconnect, which will throw error
     const room = rooms.find((ele)=>{
@@ -57,14 +58,17 @@ const removePlayerFromRoom = (username, roomName) =>{
 
     if(index !== -1){ //delete from players array
       const removedPlayer = room.players.splice(index, 1)[0]
-    }
-    if(room.players.length === 0){
-      rooms.splice(0)
+
+      if(room.players.length === 0){//room is closed: all players have left
+        rooms.splice(0)
+        console.log('Remaining rooms: ', rooms)
+        return 1
+      }else if (removedPlayer.id === room.currentTyper){//the typer left..
+        return -1
+      }
       console.log('Remaining rooms: ', rooms)
-      return true
+      return 0
     }
-    console.log('Remaining rooms: ', rooms)
-    return false
   }catch(err){
     console.log(err)
   }
@@ -79,7 +83,6 @@ const chooseTyper = (roomName)=>{
     typer = room.players.find((player)=>{
       return player.typeStatus === 0
     })
-    console.log('fromgp:', typer)
     if(typer===undefined){
       room.currentTyper = undefined
       return undefined
@@ -261,7 +264,6 @@ const startTimer = (roomName)=>{
     if(lettersLeft <= 0){
       clearInterval(room.timer)
     }
-    console.log('NEW DEBUFF: ', room, lettersLeft)
   }, 10000)
 }
 //stops timer for a room
