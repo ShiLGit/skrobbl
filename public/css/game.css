@@ -77,6 +77,7 @@ h1{
 }
 /*HINT BOX--------------------------------------------------------------------*/
 .hints-wrapper{
+  position: relative;
   background-color:#FADF63;
   grid-row-start: 2;
   display: grid;
@@ -197,7 +198,10 @@ h1{
   width: 15%;
 }
 .hints-wrapper h3{
+  position: absolute;;
+  top: 0px;
   font-family: Lexend Deca;
+  font-size: 15px;
 }
 
 .hint-bg{

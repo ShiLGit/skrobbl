@@ -16,14 +16,15 @@ const updateRoom = (roomName, newplayer)=>{
           username: newplayer.username,
           id: newplayer.id,
           avatar: av % 6,
-          typeStatus: 0, //1 for has typed; -1 for is typer, 0 for never typed
+          typeStatus: 0, //1 for has been/is typer
           score: 0,
           numHints: 0
         }
       ],
       ready: 0,
       timer: null,
-      pointDebuff: 1
+      pointDebuff: 1,
+      currentTyper: undefined
     }
 
     rooms.push(newRoom)
@@ -80,9 +81,11 @@ const chooseTyper = (roomName)=>{
     })
     console.log('fromgp:', typer)
     if(typer===undefined){
+      room.currentTyper = undefined
       return undefined
     }
     typer.typeStatus = 1
+    room.currentTyper = typer.id
     return typer.id
 }
 
@@ -118,13 +121,12 @@ const updateScore = (roomName, username, role)=>{
     return ele.name === roomName
   })
 
-  const player = room.players.find((ele)=>{
-    return ele.username === username
-  })
-
   if(role === 'guesser'){
+    const player = room.players.find((ele)=>{
+      return ele.username === username
+    })
     if(Math.ceil(room.numGuessers/2) > 0){
-      player.score += 100* room.numGuessers * room.pointDebuff
+      player.score += Math.round(100* room.numGuessers * room.pointDebuff)
     }
     room.numGuessers--
 
@@ -132,7 +134,13 @@ const updateScore = (roomName, username, role)=>{
       return 0
     }
   }else if (role === 'typer'){
-    player.score += Math.ceil((room.players.length - 1 -numGuessers) * room.pointDebuff)
+    const typer = room.players.find((ele)=>{
+      return ele.id === room.currentTyper
+    })
+    console.log('typer found:', typer)
+    if(typer != undefined){
+      typer.score += Math.round((room.players.length-1 - room.numGuessers)*75*room.pointDebuff)
+    }
   }
   console.log('after score update:', room)
 
@@ -226,26 +234,19 @@ const orderScores = (roomName)=>{
   }
 }
 
-//reset player points, word, ready
+//reset word, ready
 const resetRoom = (roomName)=>{
   console.log('reset.')
-  try{
-    const room = rooms.find((ele)=>{
-      return ele.name === roomName
-    })
 
-    for(let i = 0; i <room.players.length; i++){
-      room.players[i].score = 0
-      room.players[i].typeStatus = 0
-      room.players[i].numHints = 0
-    }
-    room.ready = 0
-    room.word = undefined
-    console.log('post reset: ', room)
-  }catch(e){
-    console.log(e)
-    return null
+  const room = rooms.find((ele)=>{
+    return ele.name === roomName
+  })
+  if(room === undefined){
+    return
   }
+  room.ready = 0
+  room.word = undefined
+  console.log('post reset: ', room)
 }
 /*timer for word reveals: not on index.js because if socket that timer is on closes, then timer disappears for whole room; not on clientside because waste to have all room members
 make req when timer runs out*/
@@ -256,7 +257,7 @@ const startTimer = (roomName)=>{
 
   room.timer = setInterval(()=>{
     lettersLeft--
-    room.pointDebuff = lettersLeft/room.word.length + 0.5
+    room.pointDebuff = lettersLeft/room.word.length
     if(lettersLeft <= 0){
       clearInterval(room.timer)
     }
@@ -267,7 +268,20 @@ const startTimer = (roomName)=>{
 const stopTimer = (roomName)=>{
   const room = rooms.find((ele)=>{return ele.name === roomName})
   clearInterval(room.timer)
-  room.pointDebuff = 0
+  room.pointDebuff = 1.0
+}
+
+//reset room points
+const resetScores = (roomName)=>{
+  const room = rooms.find((ele)=>{
+    return ele.name === roomName
+  })
+
+  for(let i = 0; i <room.players.length; i++){
+    room.players[i].score = 0
+    room.players[i].typeStatus = 0
+    room.players[i].numHints = 0
+  }
 }
 module.exports = {
   updateRoom,
@@ -283,6 +297,7 @@ module.exports = {
   allRooms,
   orderScores,
   resetRoom,
+  resetScores,
   startTimer,
   stopTimer
 }

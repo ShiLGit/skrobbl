@@ -31,10 +31,9 @@ io.on('connection', (socket)=>{ //listener for all socket events
     const deleted = gameplay.removePlayerFromRoom(toRemove.username, toRemove.roomName)
     const player = players.removePlayer(socket.id)
 
-    if(deleted === true){
+    if(deleted === true){//if all players of room have left..
       return
     }
-    console.log('?????????', gameplay.getPlayersInRoom(player.roomName))
     io.to(player.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(player.roomName))
 
 
@@ -107,6 +106,8 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
       if(flag === 0){
         console.log('time to end tha round!!!!!!')
+        gameplay.updateScore(player.roomName, player.username, 'typer')
+        gameplay.stopTimer(player.roomName)
         io.to(player.roomName).emit('end-round', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
         startRound()
 
@@ -133,6 +134,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
     const player = players.getPlayer(socket.id)
     const {ready, needed} = gameplay.roomReady(player.roomName)
     if(ready === needed){
+      gameplay.resetScores(player.roomName)
       startRound()
     }
     io.to(player.roomName).emit('update-ready-button', {ready,needed})

@@ -148,7 +148,7 @@ const revealTimer = (word)=>{
   let revealFrom = 0
 
   timer = setInterval(()=>{
-    $timer.innerHTML = `Time until letter reveal: ${--time}`
+    $timer.innerHTML = `Letter reveal in: ${--time}`
 
     if(time <= 0){
       //letterReveal
@@ -159,7 +159,7 @@ const revealTimer = (word)=>{
             revealFrom++
             newHTML = replaceAt(newHTML, i, fullWord[i])
             $word.innerHTML = newHTML
-            time = 30
+            time = 10
             break
           }
         }
@@ -170,7 +170,7 @@ const revealTimer = (word)=>{
             newHTML = replaceAt(newHTML, i, fullWord[i])
             console.log('new: ', newHTML)
             $word.innerHTML = newHTML
-            time = 30
+            time = 10
             break
           }
         }
@@ -178,8 +178,6 @@ const revealTimer = (word)=>{
 
         clearInterval(timer)
       }
-
-
     }
   },1000)
 }
@@ -433,14 +431,16 @@ socket.on('end-game', ({players, word})=>{
   $readyButton.disabled = false
 })
 const resetUI = ()=>{
+  document.getElementById('timer').innerHTML = ''
+
   //reset header thing _ __ _ __ _ _ _
   $word.innerHTML = ""
   //reset all buttons
   for(let i =0; i < $hintButtons.length; i++){
     $hintButtons[i].disabled = true
-    $hintButtons[i].style.backgroundColor = '#C3D8DA'
+    $hintButtons[i].style.backgroundColor = '#160F29'
     $hintButtons[i].style.innerHTML =''
-    $hintButtons[i].style.opacity = '0.5'
+    $hintButtons[i].style.opacity = '0.8'
   }
 
   //verbal hint reset
