@@ -22,7 +22,7 @@ const $hintButtons = [document.getElementById('hb1'),document.getElementById('hb
                       document.getElementById('hb7'),document.getElementById('hb8'),document.getElementById('hb9'),
                       document.getElementById('hb10'),document.getElementById('hb11'),document.getElementById('hb12')]
 const $notifBox = document.getElementById('notif')
-const $word = $word
+const $word = document.getElementById('word')
 
 const messageTemplate = document.getElementById('message-template').innerHTML
 const hintTemplate = document.getElementById('hint-template').innerHTML
@@ -32,8 +32,20 @@ let timer = null;
 //********************CUSTOM FUNCTIONS***************************************
 
 //--------------JOINING THE ROOM ----------------
+const replaceAt=(str, index, char)=>{
+  let toReturn = ""
+  for(let i = 0; i < str.length; i++){
+    if(i === index){
+      console.log('ditekcted')
+      toReturn += char
+    }else{
+      toReturn += str[i]
+    }
+  }
+  return toReturn
+}
 //parse querystring to create user object
-function parseQS(){
+const parseQS = () =>{
   let qs = location.search
 
   const joinReq = {
@@ -98,7 +110,9 @@ const attemptJoin = ()=>{
 
 //----------------------WORD BLANK TIMER + NOTIFICATIONS
 //header text calculate
-const generateBlanks = (word)=>{
+const generateBlanks = (secretWord)=>{
+
+  let word = secretWord.toUpperCase()
   let chars = []
   let letterCount = Math.ceil(word.length * 0.3)
   const incrementSize = Math.floor(word.length / letterCount)
@@ -106,7 +120,7 @@ const generateBlanks = (word)=>{
   let toPrint = ""
 
   for(let i = 0; i < word.length; i++){
-    chars[i] = '_ '
+    chars[i] = '_'
   }
 
   do{
@@ -119,25 +133,53 @@ const generateBlanks = (word)=>{
   }while(letterCount > 0)
 
   for(let i = 0; i<word.length; i++){
-    toPrint += chars[i] + ' '
+    toPrint += chars[i]
   }
+
+  return toPrint
 }
 
 //start timer for letter revealing
 const revealTimer = (word)=>{
-  word = secretWord.toUpperCase()
+  const fullWord = word.toUpperCase()
   const $timer = document.getElementById('timer')
-  let time = 30
+  let newHTML = $word.innerHTML
+  let time = 10
+  let revealFrom = 0
 
   timer = setInterval(()=>{
     $timer.innerHTML = `Time until letter reveal: ${--time}`
 
     if(time <= 0){
       //letterReveal
-      const shown = $word.innerHTML
-      console.log(shown)
+      if(revealFrom % 2 === 1){ //reveal from front
+        for(let i = 0; i < fullWord.length; i++){
 
-      clearInterval(timer)
+          if(newHTML[i] === '_'){
+            revealFrom++
+            newHTML = replaceAt(newHTML, i, fullWord[i])
+            $word.innerHTML = newHTML
+            time = 30
+            break
+          }
+        }
+      }else if (revealFrom % 2 === 0){//reveal from end of word
+        for(let i = fullWord.length - 1; i > -1; i--){
+          if(newHTML[i] === '_'){
+            revealFrom++
+            newHTML = replaceAt(newHTML, i, fullWord[i])
+            console.log('new: ', newHTML)
+            $word.innerHTML = newHTML
+            time = 30
+            break
+          }
+        }
+      }else{//this will execute if there are no blanks left to fill
+
+        clearInterval(timer)
+      }
+
+
     }
   },1000)
 }
@@ -286,8 +328,9 @@ socket.on('update-word', (secretWord)=>{
   const word = secretWord.toUpperCase()
 
   //change header text
-  const $header = $word.innerHTML = generateBlanks(word)
-  revealTimer(secretWord)
+  $word.innerHTML = generateBlanks(word)
+  $notifBox.style.display = 'none'
+  revealTimer(word)
 })
 
 //RENDER HINT BUTTON WORDS
