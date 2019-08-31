@@ -72,7 +72,7 @@ const removePlayerFromRoom = (username, roomName) =>{
       const removedPlayer = room.players.splice(index, 1)[0]
 
       if(room.players.length === 0){//room is closed: all players have left
-        rooms.splice(0)
+        rooms.splice(roomIndex, 1)[0]
         console.log('Remaining rooms: ', rooms)
         return 1
       }else if (removedPlayer.id === room.currentTyper){//the typer left..
@@ -110,7 +110,8 @@ const updateRoomWord = (roomName, word) =>{
     return ele.name === roomName
   })
   room.word = word.toUpperCase()
-  room.numGuessers = room.players.length - 1 //this is the # of players that are guessing
+  room.numGuessers = Math.round((room.players.length - 1)/2) //this is the # of players that are guessing
+  console.log('#guessers: ', room.numGuessers)
   //console.log('post update: ', room)
 }
 
@@ -140,7 +141,7 @@ const updateScore = (roomName, username, role)=>{
     const player = room.players.find((ele)=>{
       return ele.username === username
     })
-    if(Math.floor(room.numGuessers/2) > 0){
+    if(Math.floor(room.numGuessers) > 0){
       player.score += Math.round(100* room.numGuessers * room.pointDebuff)
     }
     room.numGuessers--
