@@ -163,7 +163,8 @@ const revealTimer = (word)=>{
 
             //whole word has been revealed
             if(newHTML.indexOf('_') === -1){
-              notification('YOURE ALL TRASH', 'YOURE ALL TRASH')
+              let iFailed = fullWord + '©'
+              socket.emit('message', iFailed)
               clearInterval(timer)
             }
             break
@@ -179,8 +180,10 @@ const revealTimer = (word)=>{
             time = 10
 
             //whole word has been revealed
-            if(newHTML.indexOf('_') === -1){
-              notification('YOURE ALL TRASH', 'YOURE ALL TRASH')
+            if(newHTML.indexOf('_') === -1)
+            {
+              let iFailed = fullWord + '©'
+              socket.emit('message', iFailed)
               clearInterval(timer)
             }
             break
@@ -188,7 +191,7 @@ const revealTimer = (word)=>{
         }
       }
     }
-  },1000)
+  },1050)
 }
 $notifBox.onclick = ()=>{
   $notifBox.style.display = 'none'

@@ -120,7 +120,6 @@ io.on('connection', (socket)=>{ //listener for all socket events
       return
     }
 
-    console.log(message, gameplay.getRoomWord(player.roomName) + '©')
     if(message === gameplay.getRoomWord(player.roomName) + '©'){//this gets sent when the timer on clientside finishes - update score (+= 0) to end round without sendimg msg
       flag = gameplay.updateScore(player.roomName, player.username, 'guesser')
       console.log('FLAG????!!!!')
