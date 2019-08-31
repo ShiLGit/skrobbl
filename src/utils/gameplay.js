@@ -109,9 +109,9 @@ const updateRoomWord = (roomName, word) =>{
   const room = rooms.find((ele)=>{
     return ele.name === roomName
   })
-  room.word = word
+  room.word = word.toUpperCase()
   room.numGuessers = room.players.length - 1 //this is the # of players that are guessing
-  console.log('post update: ', room)
+  //console.log('post update: ', room)
 }
 
 //compare string to secret word of specified room
@@ -122,7 +122,7 @@ const isRoomWord = (word, roomName) =>{
   if(!room.word){
     return false
   }
-  if(room.word.toUpperCase() === word.trim().toUpperCase()){
+  if(room.word === word.trim().toUpperCase()){
     return true
   }
   else{
@@ -154,7 +154,7 @@ const updateScore = (roomName, username, role)=>{
     })
     console.log('typer found:', typer)
     if(typer != undefined){
-      typer.score += Math.round((room.players.length-1 - room.numGuessers)*75*room.pointDebuff*((15-numHints)/15))
+      typer.score += Math.round((room.players.length-1 - room.numGuessers)*75*room.pointDebuff*((15-typer.numHints)/15))
     }
   }
   console.log('after score update:', room)
@@ -261,7 +261,7 @@ const resetRoom = (roomName)=>{
   }
   room.ready = 0
   room.word = undefined
-  console.log('post reset: ', room)
+  console.log('reset.')
 }
 /*timer for word reveals: not on index.js because if socket that timer is on closes, then timer disappears for whole room; not on clientside because waste to have all room members
 make req when timer runs out*/

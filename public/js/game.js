@@ -163,7 +163,9 @@ const revealTimer = (word)=>{
 
             //whole word has been revealed
             if(newHTML.indexOf('_') === -1){
-              notification('YOURE ALL TRASH', 'YOURE ALL TRASH')
+              alert('IDIOT')
+              let iFailed = fullWord + '©'
+              socket.emit('message', iFailed)
               clearInterval(timer)
             }
             break
@@ -179,8 +181,12 @@ const revealTimer = (word)=>{
             time = 10
 
             //whole word has been revealed
-            if(newHTML.indexOf('_') === -1){
-              notification('YOURE ALL TRASH', 'YOURE ALL TRASH')
+            if(newHTML.indexOf('_') === -1)
+            {
+              alert('IDIOT')
+              
+              let iFailed = fullWord + '©'
+              socket.emit('message', iFailed)
               clearInterval(timer)
             }
             break

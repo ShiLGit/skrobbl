@@ -115,25 +115,30 @@ io.on('connection', (socket)=>{ //listener for all socket events
   //when receiving message (in game chat) from player, send to everyone in room
   socket.on('message', (message)=>{
     const player = players.getPlayer(socket.id)
+    let flag = null
     if(message ==="" || disableChat === true){
       return
     }
 
-    if(gameplay.isRoomWord(message, player.roomName) === true){
-      const flag = gameplay.updateScore(player.roomName, player.username, 'guesser')
+    console.log(message, gameplay.getRoomWord(player.roomName) + '©')
+    if(message === gameplay.getRoomWord(player.roomName) + '©'){//this gets sent when the timer on clientside finishes - update score (+= 0) to end round without sendimg msg
+      flag = gameplay.updateScore(player.roomName, player.username, 'guesser')
+      console.log('FLAG????!!!!')
+    }
+    //timer hasn't expired yet
+    else if(gameplay.isRoomWord(message, player.roomName) === true){
+      flag = gameplay.updateScore(player.roomName, player.username, 'guesser')
       io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has guessed the werd!`})
-
-      if(flag === 0){
-        console.log('time to end tha round!!!!!!')
-        gameplay.updateScore(player.roomName, player.username, 'typer')
-        gameplay.stopTimer(player.roomName)
-        io.to(player.roomName).emit('end-round', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
-        startRound()
-
-      }
       disableChat = true
     }else{
       io.to(player.roomName).emit('message-client', {username: players.getPlayer(socket.id).username, text: message})
+    }
+
+    if(flag === 0){//game has ended because #guessers = 0
+      gameplay.updateScore(player.roomName, player.username, 'typer')
+      gameplay.stopTimer(player.roomName)
+      io.to(player.roomName).emit('end-round', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
+      return startRound()
     }
   })
 
