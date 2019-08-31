@@ -1,7 +1,6 @@
 //this module is for keeping track of what's going on in each room during gameplay (keeps player objects with more in-game info, groups players into rooms)
 const rooms = []
 /*SINCE OBJECTS IN ROOM[] ARE GETTING LONG...
-TESTING TESTING TESTING!!!!!!!
   name: name of room - always all uppercase
   players: array of all players in room
     typeStatus: if player has been typer or not; for finding typer of next round/deciding if game has ended
