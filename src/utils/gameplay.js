@@ -267,15 +267,14 @@ const resetRoom = (roomName)=>{
   }
   room.ready = 0
   room.word = undefined
+  clearInterval(room.timer)
   console.log('reset.')
 }
 /*timer for word reveals: not on index.js because if socket that timer is on closes, then timer disappears for whole room; not on clientside because waste to have all room members
 make req when timer runs out*/
 const startTimer = (roomName)=>{
   const room = rooms.find((ele)=>{return ele.name === roomName})
-  if(room.word === undefined){
-    return
-  }
+
 
   let lettersLeft = room.word.length - Math.ceil(room.word.length * 0.3) //Math.ceil...*0.3 is from gameplay.js' blank-caluclationsion!
   room.pointDebuff = 1.0
@@ -288,6 +287,7 @@ const startTimer = (roomName)=>{
       console.log(`timer for ${roomName} cleared.`)
     }
   }, 10000)
+
 }
 //stops timer for a room
 const stopTimer = (roomName)=>{

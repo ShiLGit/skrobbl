@@ -57,7 +57,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
 
     if(player !== undefined){ //only fires on game.html (index.html fires this when submitting, but player is not registered at that stage, causing an error)
-      io.to(roomName).emit('disconnect-client')
+      io.to(roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has left.`})
     }
   })
 

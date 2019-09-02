@@ -273,16 +273,6 @@ socket.on('message-client', ({username, text})=>{
   $messageContainer.scrollTop = $messageContainer.scrollHeight
 })
 
-//when user disconnect is alerted from server: render alert onto screen
-socket.on('disconnect-client', ()=>{
-  const html = Mustache.render(messageTemplate, {
-    username: 'SKROBBL',
-    text: 'A player has disconnected'
-  })
-  $messageContainer.insertAdjacentHTML('beforeend', html)
-  $messageContainer.scrollTop = $messageContainer.scrollHeight
-})
-
 //*************************STARTING THE GAME ****************************************
 //------------------choosing a word------------------------------------
 $readyButton.onclick = ()=>{
