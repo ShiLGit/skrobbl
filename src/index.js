@@ -156,12 +156,13 @@ io.on('connection', (socket)=>{ //listener for all socket events
   socket.on('ready', ()=>{
     const player = players.getPlayer(socket.id)
     const {ready, needed} = gameplay.roomReady(player.roomName)
+
+    io.to(player.roomName).emit('update-ready-button', {ready,needed})
+    io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} is ready!`} )
     if(ready === needed){
       gameplay.resetScores(player.roomName)
       startRound()
     }
-    io.to(player.roomName).emit('update-ready-button', {ready,needed})
-    io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} is ready!`} )
   })
 
 //--------------------*1) CHOOSING WORDS
