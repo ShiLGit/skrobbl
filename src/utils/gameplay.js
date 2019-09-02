@@ -58,7 +58,7 @@ const updateRoom = (roomName, newplayer)=>{
 
 //delete player, autodelete room if leaving player is last player of room; RETURN MEANINgS: 1 - room is gone, 0 - room still exists, -1 - typer has left
 const removePlayerFromRoom = (username, roomName) =>{
-  let roomIndex = 0
+  let roomIndex = -1
   try{//room is sometimes === undefined when many players instantaneously disconnect, which will throw error
     const room = rooms.find((ele)=>{
       roomIndex++
@@ -79,6 +79,7 @@ const removePlayerFromRoom = (username, roomName) =>{
       const removedPlayer = room.players.splice(index, 1)[0]
 
       if(room.players.length === 0){//room is closed: all players have left
+        console.log('pre splice():', rooms, "ri", roomIndex)
         rooms.splice(roomIndex, 1)[0]
         console.log('Remaining rooms: ', rooms)
         return 1
