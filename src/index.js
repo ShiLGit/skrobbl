@@ -25,9 +25,12 @@ io.on('connection', (socket)=>{ //listener for all socket events
   //self explanatory, IDIOT!
   socket.on('disconnect', ()=>{
     const toRemove = players.getPlayer(socket.id)
+
     if(!toRemove){
       return console.log('FROM DISCONNECT: nothing to remove')
     }
+
+    const roomName = toRemove.roomName
     //remove player from gameplay.js and players.js
     const removeStatus = gameplay.removePlayerFromRoom(toRemove.username, toRemove.roomName)
     console.log('rmstat:', removeStatus)
@@ -36,28 +39,25 @@ io.on('connection', (socket)=>{ //listener for all socket events
     //SPESHUL CASES OF DISCONNECTS
     if(removeStatus === 1){//if all players of room have left..
       return
-    }else if(removeStatus === -1){//if the typer has left, start the next round
-      io.to(player.roomName).emit('end-round', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
+    }
 
-      //copy pasted from chooseTyper() because it doesn't have access to player when called from startRound()
-      const typerid = gameplay.chooseTyper(player.roomName)
-      if(typerid === undefined){
-          console.log('game haz ended fam')
-          io.to(player.roomName).emit('end-game', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
-          return gameplay.resetRoom(player.roomName)
-      }
-      console.log('typer id: ' + typerid)
-      const typer = players.getPlayer(typerid).username
+    else if(removeStatus === -1){//if the typer has left, start the next round
+      io.to(roomName).emit('end-round', {players: gameplay.orderScores(roomName), word: gameplay.getRoomWord(roomName)})
 
-      io.to(typerid).emit('typer')
       io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: 'Current typer has left the game! (What a jerk!!!!!!!!!!!). Starting next round...'})
-      io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${typer} is the typer!`})
+      chooseTyper(roomName)
+    }
+
+    else if(gameplay.getNumGuessers(roomName) <= 0){//end the round; no more eligible guessers left after this dc
+      io.to(roomName).emit('end-round', {players: gameplay.orderScores(roomName), word: gameplay.getRoomWord(roomName)})
+      io.to(roomName).emit('message-client', {username: 'SKROBBL', text: 'No more eligible guessers left. Round will now end.'})
+      chooseTyper(roomName)
     }
     io.to(player.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(player.roomName))
 
 
     if(player !== undefined){ //only fires on game.html (index.html fires this when submitting, but player is not registered at that stage, causing an error)
-      io.to(player.roomName).emit('disconnect-client')
+      io.to(roomName).emit('disconnect-client')
     }
   })
 
@@ -122,12 +122,12 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
     if(message === gameplay.getRoomWord(player.roomName) + '©'){//this gets sent when the timer on clientside finishes - update score (+= 0) to end round without sendimg msg
       flag = gameplay.updateScore(player.roomName, player.username, 'guesser')
-      console.log('FLAG????!!!!')
     }
     //timer hasn't expired yet
     else if(gameplay.isRoomWord(message, player.roomName) === true){
       flag = gameplay.updateScore(player.roomName, player.username, 'guesser')
-      io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has guessed the werd!`})
+      const guessersLeft = gameplay.getNumGuessers(player.roomName)
+      io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has guessed the werd! ${guessersLeft} correct guesser(s) left.`})
       disableChat = true
     }else{
       io.to(player.roomName).emit('message-client', {username: players.getPlayer(socket.id).username, text: message})
@@ -146,8 +146,8 @@ io.on('connection', (socket)=>{ //listener for all socket events
   })
 //------------------------------------GAMEPLAY--------------------------------------------------------------------------
   const startRound = ()=>{
-    chooseTyper()
     const player = players.getPlayer(socket.id)
+    chooseTyper(player.roomName)
 
     io.to(player.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(player.roomName))
   }
@@ -196,20 +196,20 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
 //----------------FUNCTION DEFINITIONS FOR CHOOSING WORDS
   //choose a typer; disable hints for guessers NOTE: THIS IS THE FUNCTION THAT DETERMINES IF GAME HAS ENDED OR NOT
-  const chooseTyper = ()=>{
-    const player = players.getPlayer(socket.id)
-    const typerid = gameplay.chooseTyper(player.roomName)
+  const chooseTyper = (roomName)=>{
+    const typerid = gameplay.chooseTyper(roomName)
     if(typerid === undefined){
         console.log('game haz ended fam')
-        io.to(player.roomName).emit('end-game', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
-        return gameplay.resetRoom(player.roomName)
+        io.to(roomName).emit('end-game', {players: gameplay.orderScores(roomName), word: gameplay.getRoomWord(roomName)})
+        return gameplay.resetRoom(roomName)
     }
 
     console.log('typer id: ' + typerid)
     const typer = players.getPlayer(typerid).username
+    const numGuessers = gameplay.getNumGuessers(roomName, 'max')
 
     io.to(typerid).emit('typer')
-    io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${typer} is the typer!`})
+    io.to(roomName).emit('message-client', {username: 'SKROBBL', text: `${typer} is the typer! ${numGuessers} player(s) may guess correctly this round.`})
   }
 
 //----------------------GIVING HINTS --------------------------------------------

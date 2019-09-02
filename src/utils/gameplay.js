@@ -69,6 +69,13 @@ const removePlayerFromRoom = (username, roomName) =>{
     })
 
     if(index !== -1){ //delete from players array
+
+      if(room.numGuessers !== undefined){//adjust #guessers because of leaving player
+        const numGuessed = Math.round((room.players.length-1)/2) - room.numGuessers
+        room.numGuessers = Math.round((room.players.length-2)/3) - room.numGuessers
+        console.log('new:', room.numGuessers)
+      }
+
       const removedPlayer = room.players.splice(index, 1)[0]
 
       if(room.players.length === 0){//room is closed: all players have left
@@ -111,7 +118,6 @@ const updateRoomWord = (roomName, word) =>{
   })
   room.word = word.toUpperCase()
   room.numGuessers = Math.round((room.players.length - 1)/2) //this is the # of players that are guessing
-  console.log('#guessers: ', room.numGuessers)
   //console.log('post update: ', room)
 }
 
@@ -158,7 +164,6 @@ const updateScore = (roomName, username, role)=>{
       typer.score += Math.round((room.players.length-1 - room.numGuessers)*60*room.pointDebuff*((15-typer.numHints)/15))
     }
   }
-  console.log('after score update:', room)
 
   return room.numGuessers
 }
@@ -204,7 +209,7 @@ const roomReady= (roomName)=>{
     return ele.name === roomName
   })
   console.log(room)
-  room.ready++;
+  room.ready++
   return {ready: room.ready, needed: room.players.length}
 }
 
@@ -268,12 +273,13 @@ const resetRoom = (roomName)=>{
 make req when timer runs out*/
 const startTimer = (roomName)=>{
   const room = rooms.find((ele)=>{return ele.name === roomName})
-  let lettersLeft = room.word.length - Math.ceil(room.word.length * 0.3) //Math.ceil...*0.3 is from gameplay.js' blank-caluclationsion!
-  room.pointDebuff = 1.0
-
   if(room.word === undefined){
     return
   }
+
+  let lettersLeft = room.word.length - Math.ceil(room.word.length * 0.3) //Math.ceil...*0.3 is from gameplay.js' blank-caluclationsion!
+  room.pointDebuff = 1.0
+
   room.timer = setInterval(()=>{
     lettersLeft--
     room.pointDebuff = lettersLeft/room.word.length
@@ -302,6 +308,19 @@ const resetScores = (roomName)=>{
     room.players[i].numHints = 0
   }
 }
+
+//get numGuessers of given room
+const getNumGuessers = (roomName, option)=>{
+  const room = rooms.find((ele)=>{return ele.name === roomName})
+  if(room !== undefined){
+    let toReturn = room.numGuessers
+    if(toReturn === undefined || option === 'max'){
+      toReturn = Math.round((room.players.length - 1)/2)
+    }
+
+    return toReturn
+  }
+}
 module.exports = {
   updateRoom,
   removePlayerFromRoom,
@@ -318,5 +337,6 @@ module.exports = {
   resetRoom,
   resetScores,
   startTimer,
-  stopTimer
+  stopTimer,
+  getNumGuessers
 }
