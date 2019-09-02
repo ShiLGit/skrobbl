@@ -66,16 +66,16 @@ io.on('connection', (socket)=>{ //listener for all socket events
     player.roomName = player.roomName.trim().toUpperCase()
     //check for valid room + join option combination, null entries in URL
     if(joinOption === 'join'){
-      if(players.findRoom(player.roomName) === undefined){
-        return acknowledge('ROOM DOES NOT EXIST')
+      if(players.findRoom(player.roomName) === undefined){ //will only throw if user somehow edits querystring
+        return acknowledge('Error: Room does not exist!')
       }
     //check if room name already exists if creating one
     }else if (joinOption === 'create'){
       if(players.findRoom(player.roomName) !== undefined){
-        return acknowledge('ROOM ALRDY EXISTS')
+        return acknowledge('Bad input: Room already exists.')
       }
     }else if (player.username === undefined || player.roomName === undefined||player.username === "" || player.roomName ===""){ //IN CASE PEOPLE TRY TO ENTER GAME VIA URL WITH BAD INPUT
-        return acknowledge('ONE OF THE NAME FIELDS ARE EMPTY')
+        return acknowledge('BAD QUERYSTRING, NICE TRY!!!!!!!!!!!!!!!!!!!!!!!!!!')
     }
 
     acknowledge()
