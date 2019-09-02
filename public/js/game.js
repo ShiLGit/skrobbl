@@ -102,7 +102,7 @@ const attemptJoin = ()=>{
       })
     }
 
-    $extrainfo.innerHTML = "Translations by Yandex<br/>Room name: " + player.roomName
+    $extrainfo.innerHTML = "Translations by Yandex<br/>Room name: " + player.roomName.toUpperCase()
     //if room creator enable start button
     let qs = parseQS()
   })

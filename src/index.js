@@ -41,6 +41,12 @@ io.on('connection', (socket)=>{ //listener for all socket events
       return
     }
 
+    if(player !== undefined){ //only fires on game.html (index.html fires this when submitting, but player is not registered at that stage, causing an error)
+      
+
+      io.to(roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has left.`})
+    }
+
     else if(removeStatus === -1){//if the typer has left, start the next round
       io.to(roomName).emit('end-round', {players: gameplay.orderScores(roomName), word: gameplay.getRoomWord(roomName)})
 
@@ -55,10 +61,6 @@ io.on('connection', (socket)=>{ //listener for all socket events
     }
     io.to(player.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(player.roomName))
 
-
-    if(player !== undefined){ //only fires on game.html (index.html fires this when submitting, but player is not registered at that stage, causing an error)
-      io.to(roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has left.`})
-    }
   })
 
   //validates player properties on join stage

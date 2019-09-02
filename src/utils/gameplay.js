@@ -72,8 +72,8 @@ const removePlayerFromRoom = (username, roomName) =>{
 
       if(room.numGuessers !== undefined){//adjust #guessers because of leaving player
         const numGuessed = Math.round((room.players.length-1)/2) - room.numGuessers
-        room.numGuessers = Math.round((room.players.length-2)/3) - room.numGuessers
-        console.log('new:', room.numGuessers)
+        room.numGuessers = Math.round((room.players.length-2)/2) - numGuesser
+        console.log('new #guessers (post dc):', room.numGuessers)
       }
 
       const removedPlayer = room.players.splice(index, 1)[0]
@@ -317,7 +317,10 @@ const getNumGuessers = (roomName, option)=>{
     if(toReturn === undefined || option === 'max'){
       toReturn = Math.round((room.players.length - 1)/2)
     }
-
+    if(toReturn < 0){
+      room.numGuessers = 0
+      toReturn = 0
+    }
     return toReturn
   }
 }
