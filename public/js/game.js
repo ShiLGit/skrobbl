@@ -259,7 +259,9 @@ socket.on('message-client', ({username, text})=>{
         <h4 class = "username">${username}</h4>
         <p class = "msg-text">${text}</p>
       </div>`
-
+    if(text === 'The game has already started - wait until next round to participate.'){
+      $readyButton.disabled = true
+    }
     $messageContainer.insertAdjacentHTML('beforeend', html)
     $messageContainer.scrollTop = $messageContainer.scrollHeight
     return

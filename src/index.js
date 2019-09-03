@@ -18,7 +18,7 @@ const port = process.env.PORT || 3000
 
 io.on('connection', (socket)=>{ //listener for all socket events
   let disableChat = false
-//------------------------------------ PLAYER CONNECTION + DISCONNECTION ----------------------------------------------*
+//------------------------------------ PLAYER CONNECTION + DISCONNECTION ----------------------------------------------
   socket.on('request-active-rooms', (ack)=>{
     ack(gameplay.allRooms())
   })
@@ -54,7 +54,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
     else if(gameplay.getNumGuessers(roomName) <= 0){//end the round; no more eligible guessers left after this dc
       io.to(roomName).emit('end-round', {players: gameplay.orderScores(roomName), word: gameplay.getRoomWord(roomName)})
-      io.to(roomName).emit('message-client', {username: 'SKROBBL', text: 'No more eligible guessers left. Round will now end.'})
+      io.to(roomName).emit('message-client', {username: 'SKROBBL', text: 'No eligible guessers left. Round will now end.'})
       chooseTyper(roomName)
     }
     io.to(player.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(player.roomName))
@@ -105,6 +105,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
       socket.emit('message-client', {username: 'Welcome to skrobbl!', text: 'The game will start when all players have clicked the "ready" button.'})
     }else{
       socket.emit('message-client', {username: 'Welcome to skrobbl!', text: 'The game has already started - wait until next round to participate.'})
+      disableChat = true
     }
     io.to(newplayer.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(newplayer.roomName))
 
@@ -243,8 +244,6 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
     gameplay.updateNumHints(player.roomName, player.username)
   })
-
-//----------------------2) RESETTING ROUNDS
 })//EVERYTHING HAS TO BE NESTED INSIDE CONNECTION EVENT!!!!!!!
 
 server.listen(port, ()=>{
