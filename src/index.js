@@ -36,15 +36,13 @@ io.on('connection', (socket)=>{ //listener for all socket events
     console.log('rmstat:', removeStatus)
     const player = players.removePlayer(socket.id)
 
+    if(player !== undefined){ //only fires on game.html (index.html fires 'disconnect' submitting, but player is not registered at that stage, causing an error)
+      io.to(roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has left.`})
+    }
+
     //SPESHUL CASES OF DISCONNECTS
     if(removeStatus === 1){//if all players of room have left..
       return
-    }
-
-    if(player !== undefined){ //only fires on game.html (index.html fires this when submitting, but player is not registered at that stage, causing an error)
-      
-
-      io.to(roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has left.`})
     }
 
     else if(removeStatus === -1){//if the typer has left, start the next round
@@ -132,6 +130,9 @@ io.on('connection', (socket)=>{ //listener for all socket events
       io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has guessed the werd! ${guessersLeft} correct guesser(s) left.`})
       disableChat = true
     }else{
+      if(message.indexOf('©') !== -1){//sometimes timer messages show because game has ended >>> room word becomes undefined so above condition (...'©'..) === false
+        return
+      }
       io.to(player.roomName).emit('message-client', {username: players.getPlayer(socket.id).username, text: message})
     }
 
@@ -202,7 +203,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
   const chooseTyper = (roomName)=>{
     const typerid = gameplay.chooseTyper(roomName)
     if(typerid === undefined){
-        console.log('game haz ended fam')
+        gameplay.stopTimer(roomName)
         io.to(roomName).emit('end-game', {players: gameplay.orderScores(roomName), word: gameplay.getRoomWord(roomName)})
         return gameplay.resetRoom(roomName)
     }

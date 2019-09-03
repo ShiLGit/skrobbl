@@ -72,7 +72,7 @@ const removePlayerFromRoom = (username, roomName) =>{
 
       if(room.numGuessers !== undefined){//adjust #guessers because of leaving player
         const numGuessed = Math.round((room.players.length-1)/2) - room.numGuessers
-        room.numGuessers = Math.round((room.players.length-2)/2) - numGuesser
+        room.numGuessers = Math.round((room.players.length-2)/2) - numGuessed
         console.log('new #guessers (post dc):', room.numGuessers)
       }
 
@@ -149,13 +149,10 @@ const updateScore = (roomName, username, role)=>{
       return ele.username === username
     })
     if(Math.floor(room.numGuessers) > 0){
+      console.log(`${player.score} +=Math.round(100*${room.numGuessers} * ${room.pointDebuff})`)
       player.score += Math.round(100* room.numGuessers * room.pointDebuff)
     }
     room.numGuessers--
-
-    if(room.numGuessers <= 0){
-      return 0
-    }
   }else if (role === 'typer'){
     const typer = room.players.find((ele)=>{
       return ele.id === room.currentTyper
@@ -246,6 +243,9 @@ const orderScores = (roomName)=>{
         }
       }
       //remove max val from players array;
+      if(players[maxIndex] === undefined){
+        console.log('maxIndex:', maxIndex)
+      }
       toReturn.push({name: players[maxIndex].username, score: players[maxIndex].score})
       players.splice(maxIndex, 1)
     }
@@ -276,13 +276,19 @@ make req when timer runs out*/
 const startTimer = (roomName)=>{
   const room = rooms.find((ele)=>{return ele.name === roomName})
 
-
   let lettersLeft = room.word.length - Math.ceil(room.word.length * 0.3) //Math.ceil...*0.3 is from gameplay.js' blank-caluclationsion!
   room.pointDebuff = 1.0
 
   room.timer = setInterval(()=>{
     lettersLeft--
-    room.pointDebuff = lettersLeft/room.word.length
+    try{
+      if(lettersLeft < 0){
+        lettersLeft = 0
+      }
+      room.pointDebuff = lettersLeft/room.word.length
+    }catch(e){
+      clearInterval(room.timer)
+    }
     if(lettersLeft <= 0){
       clearInterval(room.timer)
       console.log(`timer for ${roomName} cleared.`)

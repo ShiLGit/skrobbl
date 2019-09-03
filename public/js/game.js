@@ -77,12 +77,12 @@ const parseQS = () =>{
 const attemptJoin = ()=>{
   const joinReq = parseQS()
 
-  //remove qs from url
+  /*remove qs from url
   const url = window.location.toString();
   if (url.indexOf("game.html") > 0) {
       const newUrl = url.substring(0, url.indexOf("game.html"));
       window.history.replaceState({}, document.title, newUrl);
-  }
+  }*/
   const player = {
     roomName: joinReq.roomName,
     username: joinReq.username
