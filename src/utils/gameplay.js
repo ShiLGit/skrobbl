@@ -159,7 +159,7 @@ const updateScore = (roomName, username, role)=>{
     })
     console.log('typer found:', typer)
     if(typer != undefined){
-      typer.score += Math.round((room.players.length-1 - room.numGuessers)*60*room.pointDebuff*((15-typer.numHints)/15))
+      typer.score += Math.round(50*room.pointDebuff*((15-typer.numHints)/15))
     }
   }
 
