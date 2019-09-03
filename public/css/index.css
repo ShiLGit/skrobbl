@@ -54,7 +54,7 @@ button{
   transition: 0.3s;
 
 }
-button:hover{
+#go-button:hover{
   height: 40px;
   background-color: #1D565E;
 }
@@ -79,13 +79,43 @@ button:hover{
   overflow-x: wrap;
   color: #F2CD5D;
 }
-#wincon{
+
+.info-header{
   color:#1D565E;
+  font-weight: bold;
 }
 
-.features{
+.body{
   color: #368F8B;
 }
+
 h5{
   font-size: 20px;
+}
+
+#info-toggle{
+  display: inline-block;
+  margin-top: 20px;
+  margin-left: 50px;
+  transition: 0.5s;
+
+  font-family: Poiret One;
+  font-size: 16px;
+  font-weight: bolder;
+  color: black;
+  background-color: #E8E8E8;
+  border: 2px solid #D8D8D8;
+}
+
+#info-toggle:hover{
+  background-color: white;
+  font-size: 16.5px
+}
+
+
+h6{
+  font-family: josefin sans;
+  color: #F2CD5D;
+  margin-left: 50px;
+  display: inline-block;
 }
