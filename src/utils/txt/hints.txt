@@ -1,0 +1,1 @@
+tangible;intangible;red;orange;yellow;green;blue;purple;short;long;good;bad;hot;warm;cold;loud;quiet;silent;big;small;educational;difficult;easy;cynical;optimistic;pessimistic;sarcastic;useful
