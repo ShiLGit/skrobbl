@@ -106,6 +106,9 @@ const chooseTyper = (roomName)=>{
     if(typer===undefined){
       room.currentTyper = undefined
       return undefined
+    }else if (room.players.length === 1){//ends game if all other players left instead of choosing last remaining player as typer
+      console.log('from gameplay: last remaining player detected. FORCING END!!')
+      return -1
     }
     typer.typeStatus = 1
     room.currentTyper = typer.id

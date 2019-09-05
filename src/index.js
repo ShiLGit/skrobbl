@@ -206,7 +206,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
   //choose a typer; disable hints for guessers NOTE: THIS IS THE FUNCTION THAT DETERMINES IF GAME HAS ENDED OR NOT
   const chooseTyper = (roomName)=>{
     const typerid = gameplay.chooseTyper(roomName)
-    if(typerid === undefined){
+    if(typerid === undefined || typerid === -1){
         gameplay.stopTimer(roomName)
         io.to(roomName).emit('end-game', {players: gameplay.orderScores(roomName), word: gameplay.getRoomWord(roomName)})
         return gameplay.resetRoom(roomName)

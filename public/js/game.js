@@ -318,6 +318,7 @@ socket.on('typer', ()=>{
   //kicks typer if afk
   afkTimer = setTimeout(()=>{
     location.href = '/'
+    alert('kicked fr afk u wasteman')
   }, 10000)
 })
 
