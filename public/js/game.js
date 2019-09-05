@@ -1,5 +1,5 @@
 
-//IIFE BECAUSE OF A SINGLE STOOOOOOOOOPID GLOBAL TIEMR
+//IIFE BECAUSE OF A SINGLE (NOW 2) STOOOOOOOOOPID GLOBAL TIEMR
 (function() {
 'use strict';
 const socket = io() //connect
@@ -28,6 +28,7 @@ const messageTemplate = document.getElementById('message-template').innerHTML
 const hintTemplate = document.getElementById('hint-template').innerHTML
 const allAvatars = ['../img/avatar_1.png', '../img/avatar_2.png', '../img/avatar_3.png', '../img/avatar_4.png','../img/avatar_5.png', '../img/avatar_6.png']
 let timer = null;
+let afkTimer = null;
 
 //********************CUSTOM FUNCTIONS***************************************
 
@@ -315,7 +316,7 @@ socket.on('typer', ()=>{
   }
 
   //kicks typer if afk
-  setTimeout(()=>{
+  afkTimer = setTimeout(()=>{
     location.href = '/'
   }, 10000)
 })
@@ -326,6 +327,8 @@ for (let i = 0; i < $wordButtons.length; i++) {
         socket.emit('word-chosen', $wordButtons[i].innerHTML)
         document.getElementById('modal').style.display = 'none'
         $verbalHintSend.style.display = 'block'
+        clearInterval(afkTimer)
+        alert('cleared afk?')
     }
 }
 
