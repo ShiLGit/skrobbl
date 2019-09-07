@@ -27,8 +27,10 @@ const $word = document.getElementById('word')
 const messageTemplate = document.getElementById('message-template').innerHTML
 const hintTemplate = document.getElementById('hint-template').innerHTML
 const allAvatars = ['../img/avatar_1.png', '../img/avatar_2.png', '../img/avatar_3.png', '../img/avatar_4.png','../img/avatar_5.png', '../img/avatar_6.png']
-let timer = null;
-let afkTimer = null;
+
+let timer = null
+let afkTimer = null
+let notifTimer = null
 
 //********************CUSTOM FUNCTIONS***************************************
 
@@ -204,10 +206,16 @@ const notification = (titleText, bodyText, special)=>{
   const $body = document.getElementById('notif-body')
   $notifBox.style.backgroundColor = 'white'
 
-  let timeout = 6000
-
   $title.innerHTML = titleText
   $body.innerHTML = bodyText
+
+  //display a help notification that doesn't have a timeout
+  if(special === 'help'){
+    clearInterval(notifTimer)//make sure help screen doesn't time out because ot previous notification() calls that set a timeout
+    return $notifBox.style.display = 'block'
+  }
+
+  let timeout = 6000
 
   //create game-end notification if special = 'winner'
   if(special === 'winner'){
@@ -215,7 +223,7 @@ const notification = (titleText, bodyText, special)=>{
     timeout = 20000
   }
   $notifBox.style.display = 'block'
-  setTimeout(()=>{
+  notifTimer = setTimeout(()=>{
     $notifBox.style.display = 'none'
   }, timeout)
 }
@@ -462,7 +470,7 @@ const resetUI = ()=>{
 }
 
 document.getElementById('help').onclick = ()=>{
-  notification()
+  notification('1) BASIC GAME FLOW', "If you haven't already read the info on the join page, skrobbl is a round-based word guessing game where the win condition is to be the player that has accumulated the most points across all rounds.", 'help')
 }
 
 }());//end of iife
