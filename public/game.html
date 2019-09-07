@@ -70,9 +70,20 @@
 
 <!--INSTANTIATED-->
 <div id = "notif" class = "animated bounceIn">
+  <h2>Scoring Scheme: Specifics</h2>
+  <p>There are several modifiers that affect each role's point gain when correct guesses are made:</p>
+  <h3>% of word revealed (Global):</h3>
+  <h3>Typers</h3>
+
+
+  <span id = "help-buttons">
+    <button>Exit Help</button><button>Next:Hints</button>
+  </span>
+  <!--
   <h2 id = "notif-header">Game has ended!</h2>
   <p id = "notif-body">Winner: ME!!!!!!!!</p>
   <h6>Click anywhere on this notification to close it</h6>
+-->
 </div>
 
 <div id = "modal">
@@ -87,13 +98,47 @@
     <h4 class = "username">{{username}}</h4>
     <p class = "msg-text">{{text}}</p>
   </div>
-</script><br/>
+</script>
 
 <script id = "hint-template" type = "text/html">
   <div class = "hint-bg">
     <p class = "hint-text">{{text}}</p>
   </div>
 </script><br/>
+
+<!--HELP SLIDES-->
+<script class = "help-slides" type = "text/html">
+  <h2 style = "color:#401F3E">Table of contents</h2>
+  <p style = "color: #3F2E56;font-weight:bold">Click one of the below sections for information: </p>
+  <p class = "section">Basic Rules + Game Flow</p>
+  <p class = "section" data-help-index = "0">Roles</p>
+  <p class = "section" data-help-index = "1">Hints</p>
+  <p class = "section" data-help-index = "2">Scoring Sceheme: Specifics</p>
+  <p class = "section" data-help-index = "3">Read from start</p>
+  <button>Next: Hints</button>
+</script>
+
+<script class = "help-slides" type = "text/html">
+  <h2 style = "color:#401F3E">1) Basic Rules + Game Flow</h2>
+  <p style = "font-size:15px;color:#3F2E56">skrobbl is a round-based word guessing game where the win condition is to accumulate the most points across all rounds. Each round will play out similarly: </p>
+  <p class = "bullet">1) One player is assigned the typer role. They will pick a secret word. The game will end when every player has had a turn as the typer.</p>
+  <p class = "bullet">2) All other players are assigned the role of guesser. Their job is to guess this secret word.</p>
+  <p class = "bullet">3) The typer can help the guessers by giving them hints. </p>
+  <p class = "bullet">4) The round ends when either half the guessers have guessed the word or the word has been fully revealed (see hints section)</p>
+  <p style = "font-size:15px;color:#3F2E56">Guessers acquire points by guessing the word; the typer acquires points every time a guesser guesses the word.</p>
+</script>
+
+<script class = "help-slides" type = "text/html">
+  <h2 style = "color:#401F3E">2) Hints</h2>
+  <p style = "color: #3F2E56">There are three types of hints that can help guessers:</p>
+  <p class = "bullet"><strong>Word blanks:</strong> At the start of the round, a portion of the secret word's letters will be revealed at the top of the hints panel. As time passes, more letters will be revealed. If the entire word is revealed, the round will force-end.</p>
+  <p class = "bullet"><strong>Button Hints:</strong> The buttons under 'Button Hints' will be populated with twelve random words. The typer may select any number of buttons that contain words showing relevance to the secret word for guessers to see.
+  <p class = "bullet"><strong>Hint Log:</strong> A hint-entry bar will appear at the bottom of the hint panel for the typer. They will be able to type hints that will print on the hint log. However, there are a few caveats to these types of hints: they will be run through a translation API several times before printing, to muddle their intended meaning. Typing many hints will also reduce the typer's score gain.</p>
+</script>
+
+<script class = "help-slides" type = "text/html">
+
+</script>
 
 <script src = "/socket.io/socket.io.js"></script>
 <script src = "/js/game.js"></script>

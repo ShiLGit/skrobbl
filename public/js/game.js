@@ -202,19 +202,20 @@ $notifBox.onclick = ()=>{
 
 //create a notification
 const notification = (titleText, bodyText, special)=>{
+  //display a help notification that doesn't have a timeout
+  if(special === 'help'){
+    const html = document.getElementsByClassName('help-slides')[0].innerHTML
+    $notifBox.innerHTML = html
+    clearInterval(notifTimer)//make sure help screen doesn't time out because ot previous notification() calls that set a timeout
+    return $notifBox.style.display = 'block'
+  }
+
   const $title = document.getElementById('notif-header')
   const $body = document.getElementById('notif-body')
   $notifBox.style.backgroundColor = 'white'
 
   $title.innerHTML = titleText
   $body.innerHTML = bodyText
-
-  //display a help notification that doesn't have a timeout
-  if(special === 'help'){
-    clearInterval(notifTimer)//make sure help screen doesn't time out because ot previous notification() calls that set a timeout
-    return $notifBox.style.display = 'block'
-  }
-
   let timeout = 6000
 
   //create game-end notification if special = 'winner'
@@ -470,7 +471,8 @@ const resetUI = ()=>{
 }
 
 document.getElementById('help').onclick = ()=>{
-  notification('1) BASIC GAME FLOW', "If you haven't already read the info on the join page, skrobbl is a round-based word guessing game where the win condition is to be the player that has accumulated the most points across all rounds.", 'help')
+
+  notification("", "" , 'help')
 }
 
 }());//end of iife
