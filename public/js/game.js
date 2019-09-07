@@ -318,7 +318,6 @@ socket.on('typer', ()=>{
   //kicks typer if afk
   afkTimer = setTimeout(()=>{
     location.href = '/'
-    alert('kicked fr afk u wasteman')
   }, 10000)
 })
 
@@ -329,7 +328,6 @@ for (let i = 0; i < $wordButtons.length; i++) {
         document.getElementById('modal').style.display = 'none'
         $verbalHintSend.style.display = 'block'
         clearInterval(afkTimer)
-        alert('cleared afk?')
     }
 }
 
