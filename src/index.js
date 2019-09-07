@@ -3,10 +3,10 @@ const socketio = require('socket.io')
 const http = require('http')
 const path = require('path')
 
-const fs = require('fs')
 const messageModify = require('./utils/message-modify')
 const players = require('./utils/players')
 const gameplay = require('./utils/gameplay')
+const words = require('./utils/words')
 
 const app = express()
 const server = http.createServer(app)
@@ -172,25 +172,10 @@ io.on('connection', (socket)=>{ //listener for all socket events
 //--------------------*1) CHOOSING WORDS
   //randomize 3 words; send back to client as response; randomize 9 words and emit to everyone in room to render them onto hint buttons
   socket.on('request-words', (ack)=>{
-    const wordsBuffer = fs.readFileSync(path.join(__dirname, '/utils/txt/words.txt')).toString()
-    const wordArray = wordsBuffer.split(';')
-
-    const hintsBuffer = fs.readFileSync(path.join(__dirname, '/utils/txt/hints.txt')).toString()
-    const hintArray = hintsBuffer.split(';')
-
-    const words = [3]
-    for(i = 0; i < 3; i++){
-      words[i] = wordArray[Math.floor(Math.random() * wordArray.length)]
-    }
-
-    //everything up to ack() from here is responsible for hint array
-    const hints = [12]
-    for(i = 0; i<12; i++){
-      hints[i] = hintArray[Math.floor(Math.random()*hintArray.length)]
-    }
-    const player = players.getPlayer(socket.id)
-    io.to(player.roomName).emit('render-hints', hints)
-    ack(words)
+    console.log('.........wtf.........................')
+    const choices = words.getWords()
+    console.log('YEEEEEEEEEEEHAW', choices)
+    ack(choices)
   })
 
   //TELL EVERY PLAYER IN ROOM THAT WORD WAS CHOSEN
