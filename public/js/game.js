@@ -195,7 +195,9 @@ const revealTimer = (word)=>{
   },1050)
 }
 $notifBox.onclick = ()=>{
-  $notifBox.style.display = 'none'
+  if($notifBox.getAttribute('data-exit-type')==='click'){
+    $notifBox.style.display = 'none'
+  }
 }
 
 //create a notification
