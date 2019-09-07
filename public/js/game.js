@@ -209,8 +209,8 @@ const notification = (titleText, bodyText, special)=>{
   $title.innerHTML = titleText
   $body.innerHTML = bodyText
 
-  //create game-end notification if special = 1
-  if(special === 1){
+  //create game-end notification if special = 'winner'
+  if(special === 'winner'){
     $notifBox.style.backgroundColor = '#F9DBBD'
     timeout = 20000
   }
@@ -428,7 +428,7 @@ socket.on('end-game', ({players, word})=>{
   for(let i = 1; i<players.length; i++){
     html += `${players[i].name}: ${players[i].score}pts<br/>`
   }
-  notification(`${players[0].name} wins!`, html, 1)
+  notification(`${players[0].name} wins!`, html, 'winner')
 
   const htmlMsg =
         `<div class = "speshul">
@@ -461,5 +461,8 @@ const resetUI = ()=>{
   socket.emit('enable-chat')
 }
 
+document.getElementById('help').onclick = ()=>{
+  notification()
+}
 
 }());//end of iife
