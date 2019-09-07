@@ -4,8 +4,6 @@
 'use strict';
 const socket = io() //connect
 
-//const $notifBox = document.getElementById('notif')
-
 const $sendButton = document.getElementById('send')
 const $messagebar = document.getElementById('messagebar')
 const $messageContainer = document.getElementById('message-container')
@@ -202,20 +200,13 @@ $notifBox.onclick = ()=>{
 
 //create a notification
 const notification = (titleText, bodyText, special)=>{
-  //display a help notification that doesn't have a timeout
-  if(special === 'help'){
-    const html = document.getElementsByClassName('help-slides')[0].innerHTML
-    $notifBox.innerHTML = html
-    clearInterval(notifTimer)//make sure help screen doesn't time out because ot previous notification() calls that set a timeout
-    return $notifBox.style.display = 'block'
-  }
+  $notifBox.style.backgroundColor = 'white'
 
   const html = document.getElementById('default-slide').innerHTML
   $notifBox.innerHTML = html
 
   const $title = document.getElementById('notif-header')
   const $body = document.getElementById('notif-body')
-  $notifBox.style.backgroundColor = 'white'
 
   $title.innerHTML = titleText
   $body.innerHTML = bodyText
@@ -232,6 +223,16 @@ const notification = (titleText, bodyText, special)=>{
   }, timeout)
 }
 
+
+const tutorial = ()=>{
+  //display a help notification that doesn't have a timeout
+  const html = document.getElementsByClassName('help-slides')[0].innerHTML
+  $notifBox.innerHTML = html
+  clearInterval(notifTimer)//make sure help screen doesn't time out because ot previous notification() calls that set a timeout
+  return $notifBox.style.display = 'block'
+
+
+  }
 //****************************STEP 1: JOIN ROOM ************************************
 
 //populate sidebar with player info
