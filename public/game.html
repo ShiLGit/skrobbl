@@ -70,20 +70,10 @@
 
 <!--INSTANTIATED-->
 <div id = "notif" class = "animated bounceIn">
-  <h2>Scoring Scheme: Specifics</h2>
-  <p>There are several modifiers that affect each role's point gain when correct guesses are made:</p>
-  <h3>% of word revealed (Global):</h3>
-  <h3>Typers</h3>
-
 
   <span id = "help-buttons">
     <button>Exit Help</button><button>Next:Hints</button>
   </span>
-  <!--
-  <h2 id = "notif-header">Game has ended!</h2>
-  <p id = "notif-body">Winner: ME!!!!!!!!</p>
-  <h6>Click anywhere on this notification to close it</h6>
--->
 </div>
 
 <div id = "modal">
@@ -137,7 +127,16 @@
 </script>
 
 <script class = "help-slides" type = "text/html">
+  <h2>Scoring Scheme: Specifics</h2>
+  <p>There are several modifiers that affect each role's point gain when correct guesses are made:</p>
+  <p style = "font-size:14px" class = "bullet"><strong>Typers: Number of typed hints</strong><br/> Each hint entered in the hint bar will reduce the typer's point gain from then to the end of the round by 1/15.</p>
+  <p style = "font-size:14px" class = "bullet"><strong>Guessers: How early you guess correctly relative to others</strong> Guesser points are multiplied by the number of guessers in the round. Consequently, each correct guess decreases this multiplier by 1 for other guessers.</p>
+  <p style = "font-size:14px" class = "bullet"><strong>All: Number of letter reveals</strong><br/>Point gains for both roles will be multiplied by the % of unrevealed letters. NOTE: this does not apply to the first 30s of the round.</p>
+</script>
 
+<script id = "default-slide" type = "text/html">
+  <h2 id = "notif-header">Game has ended!</h2>
+  <p id = "notif-body">Winner: ME!!!!!!!!</p>
 </script>
 
 <script src = "/socket.io/socket.io.js"></script>

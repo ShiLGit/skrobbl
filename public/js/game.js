@@ -210,6 +210,9 @@ const notification = (titleText, bodyText, special)=>{
     return $notifBox.style.display = 'block'
   }
 
+  const html = document.getElementById('default-slide').innerHTML
+  $notifBox.innerHTML = html
+
   const $title = document.getElementById('notif-header')
   const $body = document.getElementById('notif-body')
   $notifBox.style.backgroundColor = 'white'
