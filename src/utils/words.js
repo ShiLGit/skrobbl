@@ -1,6 +1,11 @@
 const path = require('path')
 const fs = require('fs')
 
+
+const wordArray = fs.readFileSync(path.join(__dirname, '/txt/words.txt')).toString().split(';')
+const hintArray = fs.readFileSync(path.join(__dirname, '/txt/hints.txt')).toString().split(';')
+
+
 //select 'amount' number of unique random words from 'array'; return them
 const selectRandom = (array, amount)=>{
   const usedIndexes = [amount]
@@ -23,17 +28,11 @@ const selectRandom = (array, amount)=>{
 
 //select 3 random words from words.txt
 const getWords = ()=>{
-  const wordBuffer = fs.readFileSync(path.join(__dirname, '/txt/words.txt')).toString()
-  const wordArray = wordBuffer.split(';')
-
   return selectRandom(wordArray, 3)
 }
 
 //select 12 random words from hints.txt
 const getHints = ()=>{
-  const hintBuffer = fs.readFileSync(path.join(__dirname, '/txt/hints.txt')).toString()
-  const hintArray = hintBuffer.split(';')
-
   return selectRandom(hintArray, 12)
 }
 

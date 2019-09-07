@@ -172,18 +172,21 @@ io.on('connection', (socket)=>{ //listener for all socket events
 //--------------------*1) CHOOSING WORDS
   //randomize 3 words; send back to client as response; randomize 9 words and emit to everyone in room to render them onto hint buttons
   socket.on('request-words', (ack)=>{
-    console.log('.........wtf.........................')
     const choices = words.getWords()
-    console.log('YEEEEEEEEEEEHAW', choices)
     ack(choices)
   })
 
   //TELL EVERY PLAYER IN ROOM THAT WORD WAS CHOSEN
   socket.on('word-chosen', (word)=>{
-    player = players.getPlayer(socket.id)
+    //update word in gameplay.js and on UI for game.js
+    const player = players.getPlayer(socket.id)
     gameplay.updateRoomWord(player.roomName, word)
     gameplay.startTimer(player.roomName)
     io.to(player.roomName).emit('update-word', word)
+
+    //update hints on UI
+    const hints = words.getHints()
+    io.to(player.roomName).emit('render-hints', hints)
     disableChat = true
   })
 
