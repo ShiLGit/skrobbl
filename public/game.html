@@ -90,8 +90,8 @@
 </script><br/>
 
 <div id = "notif" class = "animated bounceIn" data-exit-type = "click">
-
-
+  <div id = "help-slides-container">
+  </div>
 </div>
 
 <!--HELP SLIDES-->
@@ -102,9 +102,7 @@
   <p class = "section" data-slide-index = '1'>Hints</p>
   <p class = "section" data-slide-index = '2'>Scoring Sceheme: Specifics</p>
 
-  <span id = "help-buttons">
-    <button>Exit Help</button><button id = 'next-help' data-help-index = 1>Next:Hints</button>
-  </span>
+
 </script>
 
 <script class = "help-slides" type = "text/html">
@@ -116,9 +114,6 @@
   <p class = "bullet">4) The round ends when either half the guessers have guessed the word or the word has been fully revealed (see hints section)</p>
   <p style = "font-size:15px;color:#3F2E56">Guessers acquire points by guessing the word; the typer acquires points every time a guesser guesses the word.</p>
 
-  <span id = "help-buttons">
-    <button>Exit Help</button><button id = 'next-help'>Next:Hints</button>
-  </span>
 </script>
 
 <script class = "help-slides" type = "text/html">
@@ -128,9 +123,6 @@
   <p class = "bullet"><strong>Button Hints:</strong> The buttons under 'Button Hints' will be populated with twelve random words. The typer may select any number of buttons that contain words showing relevance to the secret word for guessers to see.
   <p class = "bullet"><strong>Hint Log:</strong> A hint-entry bar will appear at the bottom of the hint panel for the typer. They will be able to type hints that will print on the hint log. However, there are a few caveats to these types of hints: they will be run through a translation API several times before printing, to muddle their intended meaning. Typing many hints will also reduce the typer's score gain.</p>
 
-  <span id = "help-buttons">
-    <button>Exit Help</button><button id = 'next-help'>Next:Hints</button>
-  </span>
 </script>
 
 <script class = "help-slides" type = "text/html">
@@ -140,9 +132,6 @@
   <p style = "font-size:14px" class = "bullet"><strong>Guessers: How early you guess correctly relative to others</strong> Guesser points are multiplied by the number of guessers in the round. Consequently, each correct guess decreases this multiplier by 1 for other guessers.</p>
   <p style = "font-size:14px" class = "bullet"><strong>All: Number of letter reveals</strong><br/>Point gains for both roles will be multiplied by the % of unrevealed letters. NOTE: this does not apply to the first 30s of the round.</p>
 
-  <span id = "help-buttons">
-    <button>Exit Help</button><button id = 'next-help'>Next:Hints</button>
-  </span>
 </script>
 
 <script id = "default-slide" type = "text/html">

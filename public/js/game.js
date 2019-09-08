@@ -226,13 +226,26 @@ const notification = (titleText, bodyText, special)=>{
   }, timeout)
 }
 
-
+//make speshul click-through tutorial notifications
 const tutorial = ()=>{
   //display a help notification that doesn't have a timeout
   $notifBox.setAttribute('data-exit-type', '')
   $notifBox.style.backgroundColor = "white"
   $notifBox.style.overflowY = "scroll"
+  $notifBox.innerHTML = ""
   clearInterval(notifTimer)//make sure help screen doesn't time out because ot previous notification() calls that set a timeout
+
+
+  //generate new elements unique to tutorial notifications
+  $notifBox.insertAdjacentHTML('afterbegin', '<div id = "help-slides-container"></div>')
+  const $slideContainer = document.getElementById('help-slides-container')
+
+  $notifBox.insertAdjacentHTML('beforeend',
+    `<span id = "help-buttons">
+      <button id = 'close-help'>Close Help</button><button id = 'next-help' data-help-index = 1>Next: Basics</button>
+    </span>`)
+
+  document.getElementById('close-help').onclick = ()=>{$notifBox.style.display = 'none'}
 
   //get html for all help slides; render first slide onto notif
   const slides = []
@@ -240,18 +253,31 @@ const tutorial = ()=>{
   for(let i = 0; i < slideTemplates.length; i++){
       slides.push(slideTemplates[i].innerHTML)
   }
-  $notifBox.innerHTML = slides[0]
+  $slideContainer.innerHTML = slides[0]
 
   const sections = document.getElementsByClassName('section')
   for(let i = 0; i < sections.length; i++){
     sections[i].onclick = ()=>{
-      $notifBox.innerHTML = slides[i + 1]
+      $slideContainer.innerHTML = slides[i + 1]
     }
   }
-  return $notifBox.style.display = 'block'
 
+  //make next button have functionality
+  const $nextButton = document.getElementById('next-help')
+  $nextButton.onclick = ()=>{
+    let destIndex = $nextButton.getAttribute('data-help-index')
+    $slideContainer.innerHTML = slides[destIndex]
+    if(destIndex === '3'){
+      destIndex = 1
+    }else{
+      destIndex++
+    }
+    $nextButton.setAttribute('data-help-index', destIndex)
+    $nextButton.innerHTML = destIndex
 
   }
+  $notifBox.style.display = 'block'
+}
 //****************************STEP 1: JOIN ROOM ************************************
 
 //populate sidebar with player info
