@@ -203,6 +203,7 @@ $notifBox.onclick = ()=>{
 //create a notification
 const notification = (titleText, bodyText, special)=>{
   $notifBox.style.backgroundColor = 'white'
+  $notifBox.setAttribute('data-exit-type','click')
 
   const html = document.getElementById('default-slide').innerHTML
   $notifBox.innerHTML = html
@@ -228,6 +229,10 @@ const notification = (titleText, bodyText, special)=>{
 
 const tutorial = ()=>{
   //display a help notification that doesn't have a timeout
+  $notifBox.setAttribute('data-exit-type', '')
+  $notifBox.style.backgroundColor = "white"
+  $notifBox.style.overflowY = "scroll"
+
   const html = document.getElementsByClassName('help-slides')[0].innerHTML
   $notifBox.innerHTML = html
   clearInterval(notifTimer)//make sure help screen doesn't time out because ot previous notification() calls that set a timeout
@@ -477,8 +482,7 @@ const resetUI = ()=>{
 }
 
 document.getElementById('help').onclick = ()=>{
-
-  notification("", "" , 'help')
+  tutorial()
 }
 
 }());//end of iife
