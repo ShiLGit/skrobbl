@@ -228,6 +228,16 @@ const notification = (titleText, bodyText, special)=>{
 
 //make speshul click-through tutorial notifications
 const tutorial = ()=>{
+
+  //'wrap' a number to min value if it exceeds max val
+  const wrapAround = (num, min, max)=>{
+    if(num > max){
+      num -= max * Math.floor(num/max)
+      return num + min
+    }
+    return num
+  }
+
   //display a help notification that doesn't have a timeout
   $notifBox.setAttribute('data-exit-type', '')
   $notifBox.style.backgroundColor = "white"
@@ -237,14 +247,15 @@ const tutorial = ()=>{
 
 
   //generate new elements unique to tutorial notifications
-  $notifBox.insertAdjacentHTML('afterbegin', '<div id = "help-slides-container"></div>')
+  $notifBox.insertAdjacentHTML('afterbegin', '<div id = "help-slides-container" data-slide-index = "0"></div>')
   const $slideContainer = document.getElementById('help-slides-container')
 
   $notifBox.insertAdjacentHTML('beforeend',
     `<span id = "help-buttons">
-      <button id = 'close-help'>Close Help</button><button id = 'next-help' data-help-index = 1>Next: Basics</button>
+      <button id = 'close-help'>Close Help</button><button id = 'next-help'>Next: Basics</button>
     </span>`)
 
+  const $nextButton = document.getElementById('next-help')
   document.getElementById('close-help').onclick = ()=>{$notifBox.style.display = 'none'}
 
   //get html for all help slides; render first slide onto notif
@@ -255,27 +266,23 @@ const tutorial = ()=>{
   }
   $slideContainer.innerHTML = slides[0]
 
+  //make section-clikcs on table of contents load their respective html slide
+  const sectionNames = ['Basics', 'Hints', 'Scoring']
   const sections = document.getElementsByClassName('section')
   for(let i = 0; i < sections.length; i++){
     sections[i].onclick = ()=>{
-      $slideContainer.innerHTML = slides[i + 1]
+      $slideContainer.innerHTML = slides[i + 1] //i + 1 because table of contents slide is the 0th element
+      $slideContainer.setAttribute('data-slide-index', `${wrapAround(i+1, 0, 3)}`)
+      console.log($slideContainer.getAttribute('data-slide-index'))
     }
   }
 
-  //make next button have functionality
-  const $nextButton = document.getElementById('next-help')
   $nextButton.onclick = ()=>{
-    let destIndex = $nextButton.getAttribute('data-help-index')
-    $slideContainer.innerHTML = slides[destIndex]
-    if(destIndex === '3'){
-      destIndex = 1
-    }else{
-      destIndex++
-    }
-    $nextButton.setAttribute('data-help-index', destIndex)
-    $nextButton.innerHTML = destIndex
-
+    let currIndex = parseInt($slideContainer.getAttribute('data-slide-index'))
+    $slideContainer.innerHTML = slides[wrapAround(currIndex+1, 0, 3)]
+    $slideContainer.setAttribute('data-slide-index', wrapAround(currIndex+1, 0, 3))
   }
+
   $notifBox.style.display = 'block'
 }
 //****************************STEP 1: JOIN ROOM ************************************
