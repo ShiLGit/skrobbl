@@ -232,10 +232,22 @@ const tutorial = ()=>{
   $notifBox.setAttribute('data-exit-type', '')
   $notifBox.style.backgroundColor = "white"
   $notifBox.style.overflowY = "scroll"
-
-  const html = document.getElementsByClassName('help-slides')[0].innerHTML
-  $notifBox.innerHTML = html
   clearInterval(notifTimer)//make sure help screen doesn't time out because ot previous notification() calls that set a timeout
+
+  //get html for all help slides; render first slide onto notif
+  const slides = []
+  const slideTemplates = document.getElementsByClassName('help-slides')
+  for(let i = 0; i < slideTemplates.length; i++){
+      slides.push(slideTemplates[i].innerHTML)
+  }
+  $notifBox.innerHTML = slides[0]
+
+  const sections = document.getElementsByClassName('section')
+  for(let i = 0; i < sections.length; i++){
+    sections[i].onclick = ()=>{
+      $notifBox.innerHTML = slides[i + 1]
+    }
+  }
   return $notifBox.style.display = 'block'
 
 
