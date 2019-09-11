@@ -241,7 +241,6 @@ const tutorial = ()=>{
   //display a help notification that doesn't have a timeout
   $notifBox.setAttribute('data-exit-type', '')
   $notifBox.style.backgroundColor = "white"
-  $notifBox.style.overflowY = "scroll"
   $notifBox.innerHTML = ""
   clearInterval(notifTimer)//make sure help screen doesn't time out because ot previous notification() calls that set a timeout
 

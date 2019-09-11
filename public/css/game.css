@@ -386,6 +386,11 @@ h4{
 #help-buttons button:hover{
   background-color: #759AAB;
 }
+
+#help-slides-container{
+  max-height: 90%;
+  overflow-y: scroll;
+}
 /*INSTANTIATED----------------------------------------------------------------*/
 .msg-bg{
   background-color: ivory;
