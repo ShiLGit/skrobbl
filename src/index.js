@@ -157,9 +157,13 @@ io.on('connection', (socket)=>{ //listener for all socket events
   }
 
   //check if all players are ready
-  socket.on('ready', ()=>{
+  socket.on('ready', (ack)=>{
     const player = players.getPlayer(socket.id)
-    const {ready, needed} = gameplay.roomReady(player.roomName)
+    const {ready, needed, error} = gameplay.roomReady(player.roomName)
+
+    if(!ready || !needed || error){
+      return ack(error)
+    }
 
     io.to(player.roomName).emit('update-ready-button', {ready,needed})
     io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} is ready!`} )

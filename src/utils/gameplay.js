@@ -106,7 +106,7 @@ const chooseTyper = (roomName)=>{
     if(typer===undefined){
       room.currentTyper = undefined
       return undefined
-    }else if (room.players.length === 1){//ends game if all other players left instead of choosing 
+    }else if (room.players.length === 1){//ends game if all other players left instead of choosing
       console.log('from gameplay: last remaining player detected. FORCING END!!')
       return -1
     }
@@ -209,6 +209,9 @@ const roomReady= (roomName)=>{
   const room = rooms.find((ele)=>{
     return ele.name === roomName
   })
+  if(room.players.length === 1){
+    return {error: "Only one player!"};
+  }
   console.log(room)
   room.ready++
   return {ready: room.ready, needed: room.players.length}

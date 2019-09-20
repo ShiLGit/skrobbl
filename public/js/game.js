@@ -282,7 +282,7 @@ const tutorial = ()=>{
     console.log('index of slide: ', wrapAround(currIndex+ 1, 0, 3))
     $slideContainer.setAttribute('data-slide-index', wrapAround(currIndex+1, 0, 3))
     $nextButton.innerHTML = sectionNames[wrapAround(currIndex, 0 ,2)]
-    console.log(`sectionNames[${wrapAround(currIndex+2, 0, 2)}] = ${$nextButton.innerHTML}`)
+    console.log(`sectionNames[${wrapAround(currIndex, 0, 2)}] = ${$nextButton.innerHTML}`)
   }
 
   $notifBox.style.display = 'block'
@@ -347,7 +347,12 @@ socket.on('message-client', ({username, text})=>{
 //------------------choosing a word------------------------------------
 $readyButton.onclick = ()=>{
   $readyButton.disabled = true;
-  socket.emit('ready')
+  socket.emit('ready', (ackError)=>{
+    if(ackError){
+      notification("Can't start game", "Need 2 or more people to play!!")
+      $readyButton.disabled = false;
+    }
+  })
 }
 socket.on('update-ready-button', ({ready, needed})=>{
   $readyButton.innerHTML = `${ready}/${needed} ready`
