@@ -214,6 +214,7 @@ const notification = (titleText, bodyText, special)=>{
   $title.innerHTML = titleText
   $body.innerHTML = bodyText
   let timeout = 6000
+  clearInterval(notifTimer)
 
   //create game-end notification if special = 'winner'
   if(special === 'winner'){
