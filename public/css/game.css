@@ -365,7 +365,7 @@ h4{
 .bullet{
   text-align: left;
   font-size: 14px;
-  color:#0E6BA8;
+  color:#759AAB;
 }
 .section{
   color: #453F78;
@@ -389,6 +389,7 @@ h4{
 
 #help-slides-container{
   max-height: 90%;
+  min-height: 90%;
   overflow-y: scroll;
 }
 /*INSTANTIATED----------------------------------------------------------------*/
