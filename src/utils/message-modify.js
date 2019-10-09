@@ -40,9 +40,12 @@ const muddle = async(toTranslate)=>{
 const checkMessage = (message, roomName)=>{
   let words = message.split(' ')
   words = words.filter((word)=>{
-    return word !== ''
+    if(word !== ''){
+      word = word.toUpperCase();
+      return 1;
+    }
   })
-
+  console.log(words);
   //check word count
   if(words.length < 5){
     return {error: 'message does not contain enough words (min 5)'}
@@ -71,6 +74,11 @@ const checkMessage = (message, roomName)=>{
       sentence += words[i] + ' '
     }
 
+/*
+  //check for suspiciously frequent words
+  let bigWords = words.filter((word) => word.length > 3)
+  console.log(bigWords);
+*/
   return {message: sentence}
 
 }

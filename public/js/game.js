@@ -233,8 +233,7 @@ const tutorial = ()=>{
   //'wrap' a number to min value if it exceeds max val
   const wrapAround = (num, min, max)=>{
     if(num > max){
-      num -= max * Math.floor(num/max)
-      return num + min
+      return min
     }
     return num
   }
@@ -272,9 +271,10 @@ const tutorial = ()=>{
     for(let i = 0; i < sections.length; i++){
       sections[i].onclick = ()=>{
         $slideContainer.innerHTML = slides[i + 1] //i + 1 because table of contents slide is the 0th element
-        $slideContainer.setAttribute('data-slide-index', `${wrapAround(i+1, 0, 3)}`)
+        $slideContainer.setAttribute('data-slide-index', `${i}`)
         console.log($slideContainer.getAttribute('data-slide-index'))
       }
+      $nextButton.innerHTML = "Next: Basics"
     }}
   //make section-clikcs on table of contents load their respective html slide
   const sectionNames = ['Next: Hints', 'Next: Scoring','Next: Basics']
@@ -282,7 +282,7 @@ const tutorial = ()=>{
   for(let i = 0; i < sections.length; i++){
     sections[i].onclick = ()=>{
       $slideContainer.innerHTML = slides[i + 1] //i + 1 because table of contents slide is the 0th element
-      $slideContainer.setAttribute('data-slide-index', `${wrapAround(i+1, 0, 3)}`)
+      $slideContainer.setAttribute('data-slide-index', `${i}`)
       console.log($slideContainer.getAttribute('data-slide-index'))
     }
   }
@@ -290,8 +290,8 @@ const tutorial = ()=>{
   //go to next slide of tutorial
   $nextButton.onclick = ()=>{
     let currIndex = parseInt($slideContainer.getAttribute('data-slide-index'))
+    console.log(currIndex);
     $slideContainer.innerHTML = slides[wrapAround(currIndex+1, 0, 3)]
-    console.log('index of slide: ', wrapAround(currIndex+ 1, 0, 3))
     $slideContainer.setAttribute('data-slide-index', wrapAround(currIndex+1, 0, 3))
     $nextButton.innerHTML = sectionNames[wrapAround(currIndex, 0 ,2)]
     console.log(`sectionNames[${wrapAround(currIndex, 0, 2)}] = ${$nextButton.innerHTML}`)
