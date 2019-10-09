@@ -74,11 +74,11 @@ const checkMessage = (message, roomName)=>{
       sentence += words[i] + ' '
     }
 
-/*
+
   //check for suspiciously frequent words
   let bigWords = words.filter((word) => word.length > 3)
   console.log(bigWords);
-*/
+
   return {message: sentence}
 
 }
