@@ -77,7 +77,29 @@ const checkMessage = (message, roomName)=>{
 
   //check for suspiciously frequent words
   let bigWords = words.filter((word) => word.length > 3)
-  console.log(bigWords);
+  bigWords.sort((a,b)=>{return a.length - b.length})
+  let wordCount = 0
+  //TO DO::::::::::::::::::: CHECK FOR OCCURRENCES
+  for(let i = 0; i < bigWords.length; i++){
+    bigWords[i] = bigWords[i].toUpperCase();
+    wordCount = 1
+    console.log(bigWords[i]);
+
+    //dont remove self lol
+    for(let j = 0; j < bigWords.length; j++){
+      if(j === i){
+        continue
+      }
+
+      bigWords[j] = bigWords[j].toUpperCase();
+      if(bigWords[i] === bigWords[j] || bigWords[i].indexOf(bigWords[j]) != -1 || bigWords[j].indexOf(bigWords[i]) != -1){
+        wordCount++
+        bigWords.splice(j);
+        console.log("wordcount: " + wordCount)
+        console.log("after removal: " + bigWords)
+      }
+    }
+  }
 
   return {message: sentence}
 
