@@ -81,22 +81,28 @@ const checkMessage = (message, roomName)=>{
   let wordCount = 0
   //TO DO::::::::::::::::::: CHECK FOR OCCURRENCES
   for(let i = 0; i < bigWords.length; i++){
+    console.log("NEXT WORD: " + bigWords[i])
     bigWords[i] = bigWords[i].toUpperCase();
     wordCount = 1
-    console.log(bigWords[i]);
 
     //dont remove self lol
     for(let j = 0; j < bigWords.length; j++){
       if(j === i){
-        continue
+        j++
       }
-
+      console.log(bigWords);
+      console.log(j);
+      if( j >= bigWords.length){
+        break;
+      }
       bigWords[j] = bigWords[j].toUpperCase();
       if(bigWords[i] === bigWords[j] || bigWords[i].indexOf(bigWords[j]) != -1 || bigWords[j].indexOf(bigWords[i]) != -1){
         wordCount++
-        bigWords.splice(j);
-        console.log("wordcount: " + wordCount)
-        console.log("after removal: " + bigWords)
+        bigWords.splice(j, 1);
+        j--;
+        if(wordCount >= Math.round(words.length / 2)){
+          return {error: `No can do!! Some words appear suspiciously frequently in your hint ... ('${bigWords[i]}')`}
+        }
       }
     }
   }
