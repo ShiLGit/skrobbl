@@ -214,6 +214,7 @@ const notification = (titleText, bodyText, special)=>{
   $title.innerHTML = titleText
   $body.innerHTML = bodyText
   let timeout = 6000
+  clearInterval(notifTimer)
 
   //create game-end notification if special = 'winner'
   if(special === 'winner'){
@@ -232,8 +233,7 @@ const tutorial = ()=>{
   //'wrap' a number to min value if it exceeds max val
   const wrapAround = (num, min, max)=>{
     if(num > max){
-      num -= max * Math.floor(num/max)
-      return num + min
+      return min
     }
     return num
   }
@@ -241,7 +241,6 @@ const tutorial = ()=>{
   //display a help notification that doesn't have a timeout
   $notifBox.setAttribute('data-exit-type', '')
   $notifBox.style.backgroundColor = "white"
-  $notifBox.style.overflowY = "scroll"
   $notifBox.innerHTML = ""
   clearInterval(notifTimer)//make sure help screen doesn't time out because ot previous notification() calls that set a timeout
 
@@ -252,7 +251,7 @@ const tutorial = ()=>{
 
   $notifBox.insertAdjacentHTML('beforeend',
     `<span id = "help-buttons">
-      <button id = 'close-help'>Close Help</button><button id = 'next-help'>Next: Basics</button>
+      <button id = 'close-help'>Close Help</button><button id = 'next-help'>Next: Basics</button><button id = 'ToC'>Table of Contents</button>
     </span>`)
 
   const $nextButton = document.getElementById('next-help')
@@ -266,19 +265,31 @@ const tutorial = ()=>{
   }
   $slideContainer.innerHTML = slides[0]
 
+
+  document.getElementById('ToC').onclick = ()=>{
+    $slideContainer.innerHTML = slides[0]
+    for(let i = 0; i < sections.length; i++){
+      sections[i].onclick = ()=>{
+        $slideContainer.innerHTML = slides[i + 1] //i + 1 because table of contents slide is the 0th element
+        $slideContainer.setAttribute('data-slide-index', `${i}`)
+        console.log($slideContainer.getAttribute('data-slide-index'))
+      }
+      $nextButton.innerHTML = "Next Slide"
+    }}
   //make section-clikcs on table of contents load their respective html slide
-  const sectionNames = ['Basics', 'Hints', 'Scoring']
   const sections = document.getElementsByClassName('section')
   for(let i = 0; i < sections.length; i++){
     sections[i].onclick = ()=>{
       $slideContainer.innerHTML = slides[i + 1] //i + 1 because table of contents slide is the 0th element
-      $slideContainer.setAttribute('data-slide-index', `${wrapAround(i+1, 0, 3)}`)
+      $slideContainer.setAttribute('data-slide-index', `${i}`)
       console.log($slideContainer.getAttribute('data-slide-index'))
     }
   }
 
+  //go to next slide of tutorial
   $nextButton.onclick = ()=>{
     let currIndex = parseInt($slideContainer.getAttribute('data-slide-index'))
+    console.log(currIndex);
     $slideContainer.innerHTML = slides[wrapAround(currIndex+1, 0, 3)]
     $slideContainer.setAttribute('data-slide-index', wrapAround(currIndex+1, 0, 3))
   }
@@ -345,7 +356,12 @@ socket.on('message-client', ({username, text})=>{
 //------------------choosing a word------------------------------------
 $readyButton.onclick = ()=>{
   $readyButton.disabled = true;
-  socket.emit('ready')
+  socket.emit('ready', (ackError)=>{
+    if(ackError){
+      notification("Can't start game", "Need 2 or more people to play!!")
+      $readyButton.disabled = false;
+    }
+  })
 }
 socket.on('update-ready-button', ({ready, needed})=>{
   $readyButton.innerHTML = `${ready}/${needed} ready`

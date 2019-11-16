@@ -10,6 +10,7 @@ QUIIK CALORS
 
 body{
   background-color: white;
+  overflow: hidden;
 }
 
 .wrapper{
