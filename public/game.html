@@ -4,8 +4,11 @@
 <header>
   <title>skrobbl</title>
   <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel = "stylesheet" type = "text/css" href = "./css/game.css"/>
+  <link rel = "stylesheet" type = "text/css" href = "./css/game_mobile.css" media = "(max-width: 500px)"/>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </header>
 
 <body>
@@ -71,7 +74,7 @@
 <!--INSTANTIATED-->
 <div id = "modal">
   <span id = "modal-content">
-    <h2>Choose a word<br/>(you have 20s or you'll get kicked for afk): </h2>
+    <h2>Choose a word<br/>(Choose within 30s or you'll get kicked for afk): </h2>
     <button id = "choice1" class = "choices">Word1</button><button id= "choice2" class = "choices">Word2</button><button id = "choice3" class = "choices">Word3</button>
   </span>
 </div>

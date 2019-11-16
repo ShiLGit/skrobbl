@@ -397,7 +397,7 @@ socket.on('typer', ()=>{
   //kicks typer if afk
   afkTimer = setTimeout(()=>{
     location.href = '/'
-  }, 10000)
+  }, 30000)
 })
 
 //SET LISTENER ON ALL MODAL BUTTONS FOR ONCLICK EVENT
@@ -475,7 +475,7 @@ document.getElementById('hint').onclick = (e)=>{
   e.preventDefault()
   $hintbar.focus()
 
-  $helperMsg.innerHTML = 'please wait - translating message! (will take a few seconds)'
+  $helperMsg.innerHTML = 'Please wait - translating message! (will take a few seconds)'
   socket.emit('verbal-hint', $hintbar.value, (ack)=>{
     if(ack){
       $helperMsg.style.display = 'block'
@@ -489,7 +489,7 @@ socket.on('update-hints', (hint)=>{
   const html = Mustache.render(hintTemplate, {text: "HINT: " + hint})
   $hintContainer.insertAdjacentHTML('beforeend', html)
   $hintContainer.scrollTop = $hintContainer.scrollHeight
-  $helperMsg.innerHTML = 'message sent!'
+  $helperMsg.innerHTML = 'Message sent!'
 })
 
 //-------------------misc?----------------------------------------------
