@@ -271,13 +271,10 @@ const tutorial = ()=>{
     for(let i = 0; i < sections.length; i++){
       sections[i].onclick = ()=>{
         $slideContainer.innerHTML = slides[i + 1] //i + 1 because table of contents slide is the 0th element
-        $slideContainer.setAttribute('data-slide-index', `${i}`)
-        console.log($slideContainer.getAttribute('data-slide-index'))
       }
-      $nextButton.innerHTML = "Next: Basics"
+      $nextButton.innerHTML = "Next Slide"
     }}
   //make section-clikcs on table of contents load their respective html slide
-  const sectionNames = ['Next: Hints', 'Next: Scoring','Next: Basics']
   const sections = document.getElementsByClassName('section')
   for(let i = 0; i < sections.length; i++){
     sections[i].onclick = ()=>{
@@ -293,8 +290,6 @@ const tutorial = ()=>{
     console.log(currIndex);
     $slideContainer.innerHTML = slides[wrapAround(currIndex+1, 0, 3)]
     $slideContainer.setAttribute('data-slide-index', wrapAround(currIndex+1, 0, 3))
-    $nextButton.innerHTML = sectionNames[wrapAround(currIndex, 0 ,2)]
-    console.log(`sectionNames[${wrapAround(currIndex, 0, 2)}] = ${$nextButton.innerHTML}`)
   }
 
   $notifBox.style.display = 'block'
