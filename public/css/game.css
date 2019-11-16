@@ -383,9 +383,14 @@ h4{
   border: 2px solid #160F29;
   margin: 2px;
   transition: 0.3s;
+  bottom: 10px;
 }
 #help-buttons button:hover{
   background-color: #759AAB;
+}
+#help-slides-container{
+  height: 80%;
+  overflow-y: scroll;
 }
 /*INSTANTIATED----------------------------------------------------------------*/
 .msg-bg{
