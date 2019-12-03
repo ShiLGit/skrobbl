@@ -11,10 +11,13 @@ QUIIK CALORS
 body{
   background-color: white;
   overflow: hidden;
+<<<<<<< HEAD
 }
 
 button{
   cursor: pointer;
+=======
+>>>>>>> d7b8eb04cdfc9c414a2d08be5bf1547879fd5440
 }
 
 .wrapper{
@@ -389,14 +392,20 @@ h4{
   border: 2px solid #160F29;
   margin: 2px;
   transition: 0.3s;
+  bottom: 10px;
 }
 #help-buttons button:hover{
   background-color: #759AAB;
 }
+<<<<<<< HEAD
 
 #help-slides-container{
   max-height: 90%;
   min-height: 90%;
+=======
+#help-slides-container{
+  height: 80%;
+>>>>>>> d7b8eb04cdfc9c414a2d08be5bf1547879fd5440
   overflow-y: scroll;
 }
 /*INSTANTIATED----------------------------------------------------------------*/
