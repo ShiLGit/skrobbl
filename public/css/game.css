@@ -13,6 +13,10 @@ body{
   overflow: hidden;
 }
 
+button{
+  cursor: pointer;
+}
+
 .wrapper{
   display: grid;
   grid-template-columns: 20vw 50vw 25vw;
@@ -121,6 +125,7 @@ h1{
   border: none;
   transition: 0.4s;
   font-family: Lexend Deca;
+  cursor: pointer;
 }
 
 #hint-array button:hover{
@@ -348,6 +353,7 @@ h4{
   font-family: Lexend Deca;
   text-align: center;
   box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 #notif h6{
   position: absolute;

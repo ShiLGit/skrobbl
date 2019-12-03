@@ -39,6 +39,9 @@ h4{
   font-size: 16px;
   font-weight: bold;
 }
+[type ^= "radio"]{
+  cursor: pointer;
+}
 button{
   width: 180px;
   height: 35px;
@@ -52,6 +55,7 @@ button{
   background-color: #246A73;
   border: 2px solid #1D565E;
   transition: 0.3s;
+  cursor: pointer;
 
 }
 #go-button:hover{

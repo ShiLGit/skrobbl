@@ -251,7 +251,7 @@ const tutorial = ()=>{
 
   $notifBox.insertAdjacentHTML('beforeend',
     `<span id = "help-buttons">
-      <button id = 'close-help'>Close Help</button><button id = 'next-help'>Next: Basics</button><button id = 'ToC'>Table of Contents</button>
+      <button id = 'close-help'>Close Help</button><button id = 'next-help'>Next Slide</button><button id = 'ToC'>Table of Contents</button>
     </span>`)
 
   const $nextButton = document.getElementById('next-help')
