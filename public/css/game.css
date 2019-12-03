@@ -11,13 +11,10 @@ QUIIK CALORS
 body{
   background-color: white;
   overflow: hidden;
-<<<<<<< HEAD
 }
 
 button{
   cursor: pointer;
-=======
->>>>>>> d7b8eb04cdfc9c414a2d08be5bf1547879fd5440
 }
 
 .wrapper{
