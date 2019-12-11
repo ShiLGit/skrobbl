@@ -119,6 +119,8 @@ h1{
   height: 15%;
   width: 25%;
   color: white;
+  border-radius: 1px;
+  border: 10px solid black;
 
   background-color: #160F29;
   opacity: 0.8;
@@ -126,6 +128,7 @@ h1{
   transition: 0.4s;
   font-family: Lexend Deca;
   cursor: pointer;
+  margin: 2px;
 }
 
 #hint-array button:hover{
