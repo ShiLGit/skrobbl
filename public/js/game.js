@@ -15,10 +15,7 @@ const $verbalHintSend = document.getElementById('send-verbal-hint')
 const $hintContainer = document.getElementById('verbal-hint-container')
 const $helperMsg = document.getElementById('helper-msg')
 const $wordButtons = document.getElementsByClassName('choices')
-const $hintButtons = [document.getElementById('hb1'),document.getElementById('hb2'),document.getElementById('hb3'),
-                      document.getElementById('hb4'),document.getElementById('hb5'),document.getElementById('hb6'),
-                      document.getElementById('hb7'),document.getElementById('hb8'),document.getElementById('hb9'),
-                      document.getElementById('hb10'),document.getElementById('hb11'),document.getElementById('hb12')]
+const $hintButtons = document.getElementsByClassName('hintbtn')
 const $notifBox = document.getElementById('notif')
 const $word = document.getElementById('word')
 
@@ -29,7 +26,10 @@ const allAvatars = ['../img/avatar_1.png', '../img/avatar_2.png', '../img/avatar
 let timer = null
 let afkTimer = null
 let notifTimer = null
-
+const sfxClick = new Audio("../sfx/click.wav")
+const sfxNotif = new Audio("../sfx/notif.wav")
+const sfxMsg = new Audio("../sfx/msg.wav")
+const sfxWin = new Audio("../optimistic_notif.wav")
 //********************CUSTOM FUNCTIONS***************************************
 
 //--------------JOINING THE ROOM ----------------
@@ -229,7 +229,8 @@ const notification = (titleText, bodyText, special)=>{
 
 //make speshul click-through tutorial notifications
 const tutorial = ()=>{
-
+  sfxNotif.currentTime = 0;
+ sfxNotif.play()
   //'wrap' a number to min value if it exceeds max val
   const wrapAround = (num, min, max)=>{
     if(num > max){
@@ -432,42 +433,12 @@ socket.on('update-hint-buttons', (i)=>{
 })
 
 //ADD LISTENER ON HINT BUTTONS FOR CLICKS
-$hintButtons[0].onclick = ()=>{
+$hintButtons.onclick = ()=>{
   socket.emit('chose-hint', 0)
 }
-$hintButtons[1].onclick = ()=>{
-  socket.emit('chose-hint', 1)
-}
-$hintButtons[2].onclick = ()=>{
-  socket.emit('chose-hint', 2)
-}
-$hintButtons[3].onclick = ()=>{
-  socket.emit('chose-hint', 3)
-}
-$hintButtons[4].onclick = ()=>{
-  socket.emit('chose-hint', 4)
-}
-$hintButtons[5].onclick = ()=>{
-  socket.emit('chose-hint', 5)
-}
-$hintButtons[6].onclick = ()=>{
-  socket.emit('chose-hint', 6)
-}
-$hintButtons[7].onclick = ()=>{
-  socket.emit('chose-hint', 7)
-}
-$hintButtons[8].onclick = ()=>{
-  socket.emit('chose-hint', 8)
-}
-$hintButtons[9].onclick = ()=>{
-  socket.emit('chose-hint', 9)
-}
-$hintButtons[10].onclick = ()=>{
-  socket.emit('chose-hint', 10)
-}
-$hintButtons[11].onclick = ()=>{
-  socket.emit('chose-hint', 11)
-}
+Array.from($hintButtons).forEach((b)=>{
+  b.onclick = ()=>{socket.emit('chose-hint', b.getAttribute('data-hint-index') - 1)}
+})
 
 //VERBAL HINTS: CHECK IF HINT SENT IS VALID, DISPLAY HELPERMSG IF NOT
 document.getElementById('hint').onclick = (e)=>{
