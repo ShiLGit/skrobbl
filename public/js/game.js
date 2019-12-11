@@ -29,7 +29,7 @@ let notifTimer = null
 const sfxClick = new Audio("../sfx/click.wav")
 const sfxNotif = new Audio("../sfx/notif.wav")
 const sfxMsg = new Audio("../sfx/msg.wav")
-const sfxWin = new Audio("../optimistic_notif.wav")
+const sfxWin = new Audio("../sfx/optimistic_notif.wav")
 //********************CUSTOM FUNCTIONS***************************************
 
 //--------------JOINING THE ROOM ----------------
@@ -195,6 +195,9 @@ const revealTimer = (word)=>{
   },1050)
 }
 $notifBox.onclick = ()=>{
+  sfxClick.currentTime = 0
+  sfxClick.play()
+
   if($notifBox.getAttribute('data-exit-type')==='click'){
     $notifBox.style.display = 'none'
   }
@@ -256,7 +259,11 @@ const tutorial = ()=>{
     </span>`)
 
   const $nextButton = document.getElementById('next-help')
-  document.getElementById('close-help').onclick = ()=>{$notifBox.style.display = 'none'}
+  document.getElementById('close-help').onclick = ()=>{
+      sfxClick.currentTime = 0
+      sfxClick.play()
+      $notifBox.style.display = 'none'
+    }
 
   //get html for all help slides; render first slide onto notif
   const slides = []
@@ -268,9 +275,14 @@ const tutorial = ()=>{
 
 
   document.getElementById('ToC').onclick = ()=>{
+
+    sfxClick.currentTime = 0
+    sfxClick.play()
     $slideContainer.innerHTML = slides[0]
     for(let i = 0; i < sections.length; i++){
       sections[i].onclick = ()=>{
+        sfxClick.currentTime = 0
+        sfxClick.play()
         $slideContainer.innerHTML = slides[i + 1] //i + 1 because table of contents slide is the 0th element
       }
       $nextButton.innerHTML = "Next Slide"
@@ -279,6 +291,8 @@ const tutorial = ()=>{
   const sections = document.getElementsByClassName('section')
   for(let i = 0; i < sections.length; i++){
     sections[i].onclick = ()=>{
+      sfxClick.currentTime = 0
+      sfxClick.play()
       $slideContainer.innerHTML = slides[i + 1] //i + 1 because table of contents slide is the 0th element
       $slideContainer.setAttribute('data-slide-index', `${i}`)
       console.log($slideContainer.getAttribute('data-slide-index'))
@@ -287,10 +301,12 @@ const tutorial = ()=>{
 
   //go to next slide of tutorial
   $nextButton.onclick = ()=>{
+    sfxClick.currentTime = 0
+    sfxClick.play()
     let currIndex = parseInt($slideContainer.getAttribute('data-slide-index'))
     console.log(currIndex);
-    $slideContainer.innerHTML = slides[wrapAround(currIndex+1, 0, 3)]
-    $slideContainer.setAttribute('data-slide-index', wrapAround(currIndex+1, 0, 3))
+    $slideContainer.innerHTML = slides[wrapAround(currIndex+1, 1, 3)]
+    $slideContainer.setAttribute('data-slide-index', wrapAround(currIndex+1, 1, 3))
   }
 
   $notifBox.style.display = 'block'
@@ -318,6 +334,8 @@ socket.on('populate-sidebar', (players)=>{
 attemptJoin()
 //******************************* BASIC MESSAGING ***************************************
 $sendButton.onclick = (e)=>{
+  sfxMsg.currentTime = 0;
+  sfxMsg.play()
   e.preventDefault() //prevent browser from going through full page refresh (default behavior for forms)
 
   const message = $messagebar.value
@@ -363,6 +381,8 @@ $readyButton.onclick = ()=>{
   })
 }
 socket.on('update-ready-button', ({ready, needed})=>{
+  sfxNotif.currentTime = 0
+  sfxNotif.play()
   $readyButton.innerHTML = `${ready}/${needed} ready`
 })
 
@@ -385,6 +405,7 @@ socket.on('end-round', ({players, word})=>{
 
 //you're the typer faaaaaam (choose a word)
 socket.on('typer', ()=>{
+  $notifBox.style.display = 'none'
   socket.emit('request-words', (words)=>{
     for(let i = 0; i < 3; i++){
       $wordButtons[i].innerHTML = words[i]
@@ -432,12 +453,12 @@ socket.on('update-hint-buttons', (i)=>{
   $hintButtons[i].style.opacity = 1;
 })
 
-//ADD LISTENER ON HINT BUTTONS FOR CLICKS
-$hintButtons.onclick = ()=>{
-  socket.emit('chose-hint', 0)
-}
 Array.from($hintButtons).forEach((b)=>{
-  b.onclick = ()=>{socket.emit('chose-hint', b.getAttribute('data-hint-index') - 1)}
+  b.onclick = ()=>{
+    sfxClick.currentTime = 0
+    sfxClick.play()
+    socket.emit('chose-hint', b.getAttribute('data-hint-index') - 1)
+  }
 })
 
 //VERBAL HINTS: CHECK IF HINT SENT IS VALID, DISPLAY HELPERMSG IF NOT
@@ -465,6 +486,8 @@ socket.on('update-hints', (hint)=>{
 
 //-------------------misc?----------------------------------------------
 socket.on('end-game', ({players, word})=>{
+  sfxWin.currentTime = 0
+  sfxWin.play()
   resetUI()
 
   //show round end on hint container

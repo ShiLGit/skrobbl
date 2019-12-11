@@ -18,7 +18,7 @@ const port = process.env.PORT || 3000
 
 io.on('connection', (socket)=>{ //listener for all socket events
   let disableChat = false
-  let allowVHint = false //variable to prevent verbal hints from rendering after round has ended
+
 //------------------------------------ PLAYER CONNECTION + DISCONNECTION ----------------------------------------------
   socket.on('request-active-rooms', (ack)=>{
     ack(gameplay.allRooms())
@@ -142,8 +142,6 @@ io.on('connection', (socket)=>{ //listener for all socket events
     if(flag === 0){//game has ended because #guessers = 0
       gameplay.stopTimer(player.roomName)
       io.to(player.roomName).emit('end-round', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
-      allowVHint = false
-      console.log('allowvhint = ' + allowVHint)
       return startRound()
     }
   })
@@ -204,7 +202,6 @@ io.on('connection', (socket)=>{ //listener for all socket events
     if(typerid === undefined || typerid === -1){
         gameplay.stopTimer(roomName)
         io.to(roomName).emit('end-game', {players: gameplay.orderScores(roomName), word: gameplay.getRoomWord(roomName)})
-        allowVHint = false;
         return gameplay.resetRoom(roomName)
     }
 
@@ -212,7 +209,6 @@ io.on('connection', (socket)=>{ //listener for all socket events
     const typer = players.getPlayer(typerid).username
     const numGuessers = gameplay.getNumGuessers(roomName, 'max')
 
-    allowVHint = true;
     io.to(typerid).emit('typer')
     io.to(roomName).emit('message-client', {username: 'SKROBBL', text: `${typer} is the typer! ${numGuessers} player(s) may guess correctly this round.`})
   }
@@ -239,10 +235,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
     //send message through translation
     messageModify.muddle(msgObj.message).then((msg)=>{
-      console.log('allowVHint = ' + allowVHint);
-      if(allowVHint){
         io.to(player.roomName).emit('update-hints', msg) // tell everywan in room to render a new hint!!!!!!!!
-      }
     })
 
     gameplay.updateNumHints(player.roomName, player.username)
