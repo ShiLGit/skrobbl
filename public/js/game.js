@@ -161,7 +161,7 @@ const revealTimer = (word)=>{
             revealFrom++
             newHTML = replaceAt(newHTML, i, fullWord[i])
             $word.innerHTML = newHTML
-            time = 10
+            time = 20
 
             //whole word has been revealed
             if(newHTML.indexOf('_') === -1){
@@ -179,7 +179,7 @@ const revealTimer = (word)=>{
             newHTML = replaceAt(newHTML, i, fullWord[i])
             console.log('new: ', newHTML)
             $word.innerHTML = newHTML
-            time = 10
+            time = 20
 
             //whole word has been revealed
             if(newHTML.indexOf('_') === -1)
