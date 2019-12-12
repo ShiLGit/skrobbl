@@ -299,7 +299,7 @@ const startTimer = (roomName)=>{
       clearInterval(room.timer)
       console.log(`timer for ${roomName} cleared.`)
     }
-  }, 10000)
+  }, 20000)
 
 }
 //stops timer for a room

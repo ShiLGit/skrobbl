@@ -30,6 +30,7 @@ const sfxClick = new Audio("../sfx/click.wav")
 const sfxNotif = new Audio("../sfx/notif.wav")
 const sfxMsg = new Audio("../sfx/msg.wav")
 const sfxWin = new Audio("../sfx/optimistic_notif.wav")
+const sfxTut = new Audio("../sfx/tutorial.wav")
 //********************CUSTOM FUNCTIONS***************************************
 
 //--------------JOINING THE ROOM ----------------
@@ -232,8 +233,9 @@ const notification = (titleText, bodyText, special)=>{
 
 //make speshul click-through tutorial notifications
 const tutorial = ()=>{
-  sfxNotif.currentTime = 0;
- sfxNotif.play()
+  sfxTut.currentTime = 0
+  sfxTut.play()
+
   //'wrap' a number to min value if it exceeds max val
   const wrapAround = (num, min, max)=>{
     if(num > max){
@@ -334,8 +336,6 @@ socket.on('populate-sidebar', (players)=>{
 attemptJoin()
 //******************************* BASIC MESSAGING ***************************************
 $sendButton.onclick = (e)=>{
-  sfxMsg.currentTime = 0;
-  sfxMsg.play()
   e.preventDefault() //prevent browser from going through full page refresh (default behavior for forms)
 
   const message = $messagebar.value
@@ -365,6 +365,8 @@ socket.on('message-client', ({username, text})=>{
     username,
     text
   })
+  sfxMsg.currentTime = 0
+  sfxMsg.play()
   $messageContainer.insertAdjacentHTML('beforeend', html)
   $messageContainer.scrollTop = $messageContainer.scrollHeight
 })
@@ -478,6 +480,8 @@ document.getElementById('hint').onclick = (e)=>{
 }
 
 socket.on('update-hints', (hint)=>{
+  sfxNotif.currentTime = 0
+  sfxNotif.play()
   const html = Mustache.render(hintTemplate, {text: "HINT: " + hint})
   $hintContainer.insertAdjacentHTML('beforeend', html)
   $hintContainer.scrollTop = $hintContainer.scrollHeight
