@@ -206,6 +206,9 @@ $notifBox.onclick = ()=>{
 
 //create a notification
 const notification = (titleText, bodyText, special)=>{
+  sfxTut.currentTime = 0
+  sfxTut.play()
+
   $notifBox.style.backgroundColor = 'white'
   $notifBox.setAttribute('data-exit-type','click')
 
