@@ -146,7 +146,7 @@ const revealTimer = (word)=>{
   const fullWord = word.toUpperCase()
   const $timer = document.getElementById('timer')
   let newHTML = $word.innerHTML
-  let time = 10
+  let time = 20
   let revealFrom = 0
 
   timer = setInterval(()=>{
