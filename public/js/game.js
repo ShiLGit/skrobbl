@@ -30,7 +30,7 @@ const sfxClick = new Audio("../sfx/click.wav")
 const sfxNotif = new Audio("../sfx/notif.wav")
 const sfxMsg = new Audio("../sfx/msg.wav")
 const sfxWin = new Audio("../sfx/optimistic_notif.wav")
-const sfxTut = new Audio("../sfx/tutorial.wav")
+const sfxTut = new Audio("../sfx/kick.wav")
 //********************CUSTOM FUNCTIONS***************************************
 
 //--------------JOINING THE ROOM ----------------
@@ -321,6 +321,8 @@ const tutorial = ()=>{
 //populate sidebar with player info
 socket.on('populate-sidebar', (players)=>{
   let i = 0;
+  sfxTut.currentTime = 0
+  sfxTut.play()
   for(i=0; i< players.length; i++){
     $players[i].style.display = "block"
     $players[i].innerHTML = `<img src = ${allAvatars[players[i].avatar]}>
