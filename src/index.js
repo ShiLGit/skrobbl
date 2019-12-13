@@ -78,7 +78,7 @@ io.on('connection', (socket)=>{ //listener for all socket events
     }else if (player.username === undefined || player.roomName === undefined||player.username === "" || player.roomName ===""){ //IN CASE PEOPLE TRY TO ENTER GAME VIA URL WITH BAD INPUT
         return acknowledge('BAD QUERYSTRING, NICE TRY!!!!!!!!!!!!!!!!!!!!!!!!!!')
     }
-    acknowledge()
+    acknowledge(
   })
 
   //adds player to player array; connects them to room : NOTE::: ARGUMENT IS FROM GAME.JS
