@@ -37,6 +37,7 @@ const muddle = async(toTranslate)=>{
   return response.text[0]
 }
 
+
 const checkMessage = (message, roomName)=>{
   let words = message.split(' ')
   words = words.filter((word)=>{
@@ -45,22 +46,39 @@ const checkMessage = (message, roomName)=>{
       return 1;
     }
   })
+  words = words.map((w)=>{
+    let toReturn = w.replace("'", "")
+    toReturn = toReturn.replace('"')
+    toReturn = toReturn.toUpperCase()
+    return toReturn
+  })
   console.log(words);
   //check word count
   if(words.length < 5){
-    return {error: 'message does not contain enough words (min 5)'}
+    return {error: 'Message does not contain enough words (min 5)'}
   }
 
   //check if hint contains secret word
   let secretWord = gameplay.getRoomWord(roomName)
   if(message.toUpperCase().indexOf(secretWord.toUpperCase()) != -1){
-    return {error: `hint can't contain the secret word '${secretWord}' (even if it's inside another bigger word!)`}
+    return {error: `Hint can't contain the secret word '${secretWord}' (even if it's inside another bigger word!)`}
   }
 
   //check for wrong spellings
   const illegalWords = spell.check(message)
+  const letters = 'BCDEFGHJKLMNOPQRSTUVWXYZ'
+  let illegal = false
+  words.forEach((w)=>{
+    console.log(`${w} : ${w.length}; ${letters.indexOf(w)}`)
+    if(w.length == 1 && letters.indexOf(w) != -1){
+      illegal = true;
+    }
+  })
+  if(illegal = true){
+    return {error: "Single letters (excluding 'I', 'A') are not allowed as hints"}
+  }
   if(illegalWords.length > 0){
-    return {error: `message contains illegal words: ${illegalWords}`}
+    return {error: `Message contains illegal words: ${illegalWords}`}
   }
 
   //check for spammed words to help reach word count
@@ -68,7 +86,7 @@ const checkMessage = (message, roomName)=>{
     let prevWord = ''
     for(let i = 0; i < words.length; i++){
       if(words[i].toUpperCase() === prevWord.toUpperCase()){
-        return {error: "nice try, you sneaky mongrel!!! you can't reach the required word count by spamming the same words!!!"}
+        return {error: "Nice try, you sneaky mongrel!!! you can't reach the required word count by spamming the same words!!!"}
       }
       prevWord = words[i]
       sentence += words[i] + ' '
