@@ -74,7 +74,7 @@ const checkMessage = (message, roomName)=>{
       illegal = true;
     }
   })
-  if(illegal = true){
+  if(illegal == true){
     return {error: "Single letters (excluding 'I', 'A') are not allowed as hints"}
   }
   if(illegalWords.length > 0){
