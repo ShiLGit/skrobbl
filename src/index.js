@@ -127,38 +127,47 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
   //when receiving message (in game chat) from player, send to everyone in room
   socket.on('message', (message)=>{
-    const player = players.getPlayer(socket.id)
-    let flag = null
-    if(message ==="" || disableChat === true){
-      return
-    }
-
-    if(message === gameplay.getRoomWord(player.roomName) + '©'){//this gets sent when the timer on clientside finishes - update score (+= 0) to end round without sendimg msg
-      flag = gameplay.updateScore(player.roomName, player.username, 'guesser')
-    }
-    //timer hasn't expired yet
-    else if(gameplay.isRoomWord(message, player.roomName) === true){
-      flag = gameplay.updateScore(player.roomName, player.username, 'guesser')
-      gameplay.updateScore(player.roomName, player.username, 'typer')
-      const guessersLeft = gameplay.getNumGuessers(player.roomName)
-      io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has guessed the werd! ${guessersLeft} correct guesser(s) left.`})
-      disableChat = true
-    }else{
-      if(message.indexOf('©') !== -1){//sometimes timer messages show because game has ended >>> room word becomes undefined so above condition (...'©'..) === false
+    try{
+      const player = players.getPlayer(socket.id)
+      let flag = null
+      if(message ==="" || disableChat === true){
         return
       }
-      io.to(player.roomName).emit('message-client', {username: players.getPlayer(socket.id).username, text: message})
+
+      if(message === gameplay.getRoomWord(player.roomName) + '©'){//this gets sent when the timer on clientside finishes - update score (+= 0) to end round without sendimg msg
+        flag = gameplay.updateScore(player.roomName, player.username, 'guesser')
+      }
+      //timer hasn't expired yet
+      else if(gameplay.isRoomWord(message, player.roomName) === true){
+        flag = gameplay.updateScore(player.roomName, player.username, 'guesser')
+        gameplay.updateScore(player.roomName, player.username, 'typer')
+        const guessersLeft = gameplay.getNumGuessers(player.roomName)
+        io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} has guessed the werd! ${guessersLeft} correct guesser(s) left.`})
+        disableChat = true
+      }else{
+        if(message.indexOf('©') !== -1){//sometimes timer messages show because game has ended >>> room word becomes undefined so above condition (...'©'..) === false
+          return
+        }
+        io.to(player.roomName).emit('message-client', {username: players.getPlayer(socket.id).username, text: message})
+      }
+
+      if(flag === 0){//game has ended because #guessers = 0
+        gameplay.stopTimer(player.roomName)
+        io.to(player.roomName).emit('end-round', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
+        return startRound()
+      }
+    }catch(e){
+      console.log(e)
     }
 
-    if(flag === 0){//game has ended because #guessers = 0
-      gameplay.stopTimer(player.roomName)
-      io.to(player.roomName).emit('end-round', {players: gameplay.orderScores(player.roomName), word: gameplay.getRoomWord(player.roomName)})
-      return startRound()
-    }
-  })
+})
 
   socket.on('enable-chat', ()=>{
-    disableChat = false
+    try{
+      disableChat = false
+    }catch(e){
+      console.log(e)
+    }
   })
 //------------------------------------GAMEPLAY--------------------------------------------------------------------------
   const startRound = ()=>{
@@ -170,40 +179,52 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
   //check if all players are ready
   socket.on('ready', (ack)=>{
-    const player = players.getPlayer(socket.id)
-    const {ready, needed, error} = gameplay.roomReady(player.roomName)
+    try{
+      const player = players.getPlayer(socket.id)
+      const {ready, needed, error} = gameplay.roomReady(player.roomName)
 
-    if(!ready || !needed || error){
-      return ack(error)
-    }
+      if(!ready || !needed || error){
+        return ack(error)
+      }
 
-    io.to(player.roomName).emit('update-ready-button', {ready,needed})
-    io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} is ready!`} )
-    if(ready === needed){
-      gameplay.resetScores(player.roomName)
-      startRound()
+      io.to(player.roomName).emit('update-ready-button', {ready,needed})
+      io.to(player.roomName).emit('message-client', {username: 'SKROBBL', text: `${player.username} is ready!`} )
+      if(ready === needed){
+        gameplay.resetScores(player.roomName)
+        startRound()
+      }
+    }catch(e){
+      console.log(e)
     }
   })
 
 //--------------------*1) CHOOSING WORDS
   //randomize 3 words; send back to client as response; randomize 9 words and emit to everyone in room to render them onto hint buttons
   socket.on('request-words', (ack)=>{
-    const choices = words.getWords()
-    ack(choices)
+    try{
+      const choices = words.getWords()
+      ack(choices)
+    }catch(e){
+      console.log(e)
+    }
   })
 
   //TELL EVERY PLAYER IN ROOM THAT WORD WAS CHOSEN
   socket.on('word-chosen', (word)=>{
-    //update word in gameplay.js and on UI for game.js
-    const player = players.getPlayer(socket.id)
-    gameplay.updateRoomWord(player.roomName, word)
-    gameplay.startTimer(player.roomName)
-    io.to(player.roomName).emit('update-word', word)
+    try{
+      //update word in gameplay.js and on UI for game.js
+      const player = players.getPlayer(socket.id)
+      gameplay.updateRoomWord(player.roomName, word)
+      gameplay.startTimer(player.roomName)
+      io.to(player.roomName).emit('update-word', word)
 
-    //update hints on UI
-    const hints = words.getHints()
-    io.to(player.roomName).emit('render-hints', hints)
-    disableChat = true
+      //update hints on UI
+      const hints = words.getHints()
+      io.to(player.roomName).emit('render-hints', hints)
+      disableChat = true
+    }catch(e){
+      console.log(e)
+    }
   })
 
 //----------------FUNCTION DEFINITIONS FOR CHOOSING WORDS
@@ -227,29 +248,37 @@ io.on('connection', (socket)=>{ //listener for all socket events
 //----------------------GIVING HINTS --------------------------------------------
 //TELL EVERY PLAYER IN ROOM TO UPDATE HINT BUTTONS
   socket.on('chose-hint', (index)=>{
-    const player = players.getPlayer(socket.id)
-    io.to(player.roomName).emit('update-hint-buttons', index)
+    try{
+      const player = players.getPlayer(socket.id)
+      io.to(player.roomName).emit('update-hint-buttons', index)
+    }catch(e){
+      console.log(e)
+    }
   })
 
 //CHECK VERBAL HINT SENT FROM TYPER; IF VALID,
   socket.on('verbal-hint', (msg, ack)=>{
-    const player = players.getPlayer(socket.id)
+    try{
+      const player = players.getPlayer(socket.id)
 
-    //check for invalid messages
-    const msgObj = messageModify.checkMessage(msg, player.roomName)
-    if(msgObj.error){
-      console.log(msgObj.error)
-      return ack({error: msgObj.error})
-    }else{
-      ack()
+      //check for invalid messages
+      const msgObj = messageModify.checkMessage(msg, player.roomName)
+      if(msgObj.error){
+        console.log(msgObj.error)
+        return ack({error: msgObj.error})
+      }else{
+        ack()
+      }
+
+      //send message through translation
+      messageModify.muddle(msgObj.message).then((msg)=>{
+          io.to(player.roomName).emit('update-hints', msg) // tell everywan in room to render a new hint!!!!!!!!
+      })
+
+      gameplay.updateNumHints(player.roomName, player.username)
+    }catch(e){
+      console.log(e)
     }
-
-    //send message through translation
-    messageModify.muddle(msgObj.message).then((msg)=>{
-        io.to(player.roomName).emit('update-hints', msg) // tell everywan in room to render a new hint!!!!!!!!
-    })
-
-    gameplay.updateNumHints(player.roomName, player.username)
   })
 })//EVERYTHING HAS TO BE NESTED INSIDE CONNECTION EVENT!!!!!!!
 
