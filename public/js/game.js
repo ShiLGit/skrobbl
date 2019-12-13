@@ -146,7 +146,7 @@ const revealTimer = (word)=>{
   const fullWord = word.toUpperCase()
   const $timer = document.getElementById('timer')
   let newHTML = $word.innerHTML
-  let time = 20
+  let time = 40
   let revealFrom = 0
 
   timer = setInterval(()=>{
@@ -161,7 +161,7 @@ const revealTimer = (word)=>{
             revealFrom++
             newHTML = replaceAt(newHTML, i, fullWord[i])
             $word.innerHTML = newHTML
-            time = 20
+            time = 40
 
             //whole word has been revealed
             if(newHTML.indexOf('_') === -1){
@@ -179,7 +179,7 @@ const revealTimer = (word)=>{
             newHTML = replaceAt(newHTML, i, fullWord[i])
             console.log('new: ', newHTML)
             $word.innerHTML = newHTML
-            time = 20
+            time = 40
 
             //whole word has been revealed
             if(newHTML.indexOf('_') === -1)
@@ -457,7 +457,13 @@ socket.on('render-hints', (hints)=>{
   }
 })
 socket.on('update-hint-buttons', (i)=>{
-  $hintButtons[i].style.opacity = 1;
+  console.log($hintButtons[i].style.opacity > 0.8)
+  console.log($hintButtons[i].style.opacity)
+  if($hintButtons[i].style.opacity > 0.8){
+    $hintButtons[i].style.opacity = 0.8;
+  }else{
+    $hintButtons[i].style.opacity = 1;
+  }
 })
 
 Array.from($hintButtons).forEach((b)=>{
@@ -538,8 +544,6 @@ const resetUI = ()=>{
 
   //verbal hint reset
   $verbalHintSend.style.display = 'none';
-
-  //show scoreboard
   socket.emit('enable-chat')
 }
 
