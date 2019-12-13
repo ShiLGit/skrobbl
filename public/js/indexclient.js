@@ -93,12 +93,3 @@ $send.onclick = ()=>{
     }
   })
 }
-
-socket.on('validate-player-client', (res)=>{
-  if(res.error){
-    return alert('Error: ', res.error)
-  }
-  else if (res.approved){
-    $form.submit()
-  }
-})

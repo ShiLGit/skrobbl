@@ -21,7 +21,11 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
 //------------------------------------ PLAYER CONNECTION + DISCONNECTION ----------------------------------------------
   socket.on('request-active-rooms', (ack)=>{
-    ack(gameplay.allRooms())
+    try{
+      ack(gameplay.allRooms())
+    }catch(e){
+      console.log(e)
+    }
   })
   //self explanatory, IDIOT!
   socket.on('disconnect', ()=>{
@@ -64,52 +68,60 @@ io.on('connection', (socket)=>{ //listener for all socket events
 
   //validates player properties on join stage
   socket.on('validate-player', (player, joinOption, acknowledge)=>{
-    player.roomName = player.roomName.trim().toUpperCase()
-    //check for valid room + join option combination, null entries in URL
-    if(joinOption === 'join'){
-      if(players.findRoom(player.roomName) === undefined){ //will only throw if user somehow edits querystring
-        return acknowledge('Error: Room does not exist!')
+    try{
+      player.roomName = player.roomName.trim().toUpperCase()
+      //check for valid room + join option combination, null entries in URL
+      if(joinOption === 'join'){
+        if(players.findRoom(player.roomName) === undefined){ //will only throw if user somehow edits querystring
+          return acknowledge('Error: Room does not exist!')
+        }
+      //check if room name already exists if creating one
+      }else if (joinOption === 'create'){
+        if(players.findRoom(player.roomName) !== undefined){
+          return acknowledge('Bad input: Room already exists.')
+        }
+      }else if (player.username === undefined || player.roomName === undefined||player.username === "" || player.roomName ===""){ //IN CASE PEOPLE TRY TO ENTER GAME VIA URL WITH BAD INPUT
+          return acknowledge('BAD QUERYSTRING, NICE TRY!!!!!!!!!!!!!!!!!!!!!!!!!!')
       }
-    //check if room name already exists if creating one
-    }else if (joinOption === 'create'){
-      if(players.findRoom(player.roomName) !== undefined){
-        return acknowledge('Bad input: Room already exists.')
-      }
-    }else if (player.username === undefined || player.roomName === undefined||player.username === "" || player.roomName ===""){ //IN CASE PEOPLE TRY TO ENTER GAME VIA URL WITH BAD INPUT
-        return acknowledge('BAD QUERYSTRING, NICE TRY!!!!!!!!!!!!!!!!!!!!!!!!!!')
+      acknowledge()
+
+    }catch(e){
+      console.log(e)
     }
-    acknowledge()
   })
 
   //adds player to player array; connects them to room : NOTE::: ARGUMENT IS FROM GAME.JS
   socket.on('join', (playerArg, acknowledge)=>{
+    try{
+      const newplayer = players.addPlayer({
+        roomName: playerArg.roomName,
+        username: playerArg.username,
+        id: socket.id
+      })
 
-    const newplayer = players.addPlayer({
-      roomName: playerArg.roomName,
-      username: playerArg.username,
-      id: socket.id
-    })
+      if(newplayer.error){//this executes if players.js returns object with error (from addPlayer())
+        return acknowledge(newplayer.error)
+      }
+      gameplay.updateRoom(newplayer.roomName, newplayer)
 
-    if(newplayer.error){//this executes if players.js returns object with error (from addPlayer())
-      return acknowledge(newplayer.error)
+      if(gameplay.getPlayersInRoom(newplayer.roomName).length > 8){
+        return acknowledge('Error: room is already full (8 players)')
+      }
+      socket.join(newplayer.roomName)
+      socket.broadcast.to(newplayer.roomName).emit('message-client', {username: 'SKROBBL', text: `${newplayer.username} has joined the room.`})
+
+      if(gameplay.getRoomWord(newplayer.roomName) === undefined){
+        socket.emit('message-client', {username: 'Welcome to skrobbl!', text: 'The game will start when all players have clicked the "ready" button.'})
+      }else{
+        socket.emit('message-client', {username: 'Welcome to skrobbl!', text: 'The game has already started - wait until next round to participate.'})
+        disableChat = true
+      }
+      io.to(newplayer.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(newplayer.roomName))
+
+      acknowledge()
+    }catch(e){
+      console.log(e)
     }
-    gameplay.updateRoom(newplayer.roomName, newplayer)
-
-    if(gameplay.getPlayersInRoom(newplayer.roomName).length > 8){
-      return acknowledge('Error: room is already full (8 players)')
-    }
-    socket.join(newplayer.roomName)
-    socket.broadcast.to(newplayer.roomName).emit('message-client', {username: 'SKROBBL', text: `${newplayer.username} has joined the room.`})
-
-    if(gameplay.getRoomWord(newplayer.roomName) === undefined){
-      socket.emit('message-client', {username: 'Welcome to skrobbl!', text: 'The game will start when all players have clicked the "ready" button.'})
-    }else{
-      socket.emit('message-client', {username: 'Welcome to skrobbl!', text: 'The game has already started - wait until next round to participate.'})
-      disableChat = true
-    }
-    io.to(newplayer.roomName).emit('populate-sidebar', gameplay.getPlayersInRoom(newplayer.roomName))
-
-    acknowledge()
   })
 //----------------------------------------BASIC MESSAGING --------------------------------------------------------------*
 
