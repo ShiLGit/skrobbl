@@ -1,7 +1,7 @@
 # skrobbl
-Multiplayer web game inspired by skribbl.io (made w/ Socket.io, Express and NodeJS)
+Multiplayer web game inspired by skribbl.io (made w/ socket.io and nodejs)
 
-I'M GONNA DEPLOY THIS TO HEROKU EVENTUALLY: https://skrobbl.herokuapp.com/
+I'M GONNA DEPLOY THIS TO HEROKU EVENTUALLY: [link]
 
 Server side made with nodejs and socket.io; front-end made with vanilla css/Javascript/HTML (+some libraries)
 
