@@ -1,21 +1,20 @@
 # skrobbl
 Multiplayer web game inspired by skribbl.io (made w/ socket.io and nodejs)
 
-I'M GONNA DEPLOY THIS TO HEROKU EVENTUALLY: [link]
+Deployed on Heroku : http://skrobbl.herokuapp.com/ 
 
-Server side made with nodejs and socket.io; front-end made with vanilla css/Javascript/HTML (+some libraries)
+Server side made with nodejs and socket.io; front-end made with vanilla css/Javascript/HTML (+ some libraries)
 
 ------------------------------------------------------------------------------------------
 
 How the game works: 
+Win condition: get the most points at the end of the game.
 
-Win condition: have the most points at the end of the game
+1) A player is chosen to be a typer at the start of each round: they are given a secret word that the other players should guess. Points are given to the typer when correct guesses are made.
 
-ROLES
-- Typer (role): one per round. Choose one of three words for other players to guess. The game ends when every player has had a turn as the typer.
-- Guesser (role): guess the word the typer has chosen. The earlier you make a correct guess, the higher your score.
+2) All other players are guessers. They earn points by correctly guessing the secret word. The game ends when every player has had a turn as the typer. 
 
-HINTS
-- Button hints: an array of twelve buttons will be populated with random words at the beginning of the round. The typer will pick those that are relevant to the secret word as a hint to the other players; they will be able to see the typer's choices.
-- Sentence hints: the typer can type clues for the other guessers to see. However, they get run through Yandex translate (translation api) multiple times before being printed (to muddle their meaning)
+>>The typer may give hints to the other players: 
+  1) Send a message that gets run through Yandex Translate several times before printing (to muddle its meaning)
+  2) Choose relevant words from an array of randomly-populated buttons for other players to see
 
