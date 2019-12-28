@@ -17,6 +17,7 @@ h1{
 
   float:left;
   margin-left: 15%;
+  box-shadow: 5px 5px 0px #6e6c69;
 }
 form{
   font-family: Poiret One;
