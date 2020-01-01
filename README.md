@@ -1,9 +1,9 @@
 # skrobbl
-Multiplayer web game inspired by skribbl.io (made w/ socket.io and nodejs)
+Backend: Nodejs + Express + Socket.io | Frontend: Vanilla CSS + JavaScript 
+
+Multiplayer word-guessing web game inspired by skribbl.io, except hints are given via messages that are run through a translation service many times (+buttons) rather than through drawing.
 
 Deployed on Heroku : http://skrobbl.herokuapp.com/ 
-
-Server side made with nodejs and socket.io; front-end made with vanilla css/Javascript/HTML (+ some libraries)
 
 ------------------------------------------------------------------------------------------
 
