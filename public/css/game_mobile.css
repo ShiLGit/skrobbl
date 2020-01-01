@@ -10,15 +10,14 @@ QUIIK CALORS
 
 body{
   background-color: red;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .wrapper{
   display: grid;
-  grid-template-rows:10vh 80vh 20vh;
-
-  grid-column-gap: 10px;
+  grid-template-rows:60vh 40vh 20vh 20vh;
   grid-row-gap: 10px;
+  grid-template-columns: 95vw;
 }
 
 h1{
@@ -31,8 +30,7 @@ h1{
   position: relative;
   background-color: #D6E681;
 
-  grid-row-start: 1;
-  grid-row-end: 2;
+  grid-row-start: 4;
 
   display: grid;
   grid-template-columns:20vw 60vw 20vw;
@@ -40,11 +38,6 @@ h1{
 
 }
 .title-wrapper h1{
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 1;
-  grid-row-end: 3;
-
   font-size: 60px;
   text-align: center;
   margin-top: 10px;
@@ -69,14 +62,12 @@ h1{
   background-color: white;
   border: none;
 }
-#start-button{
 
-}
 /*HINT BOX--------------------------------------------------------------------*/
 .hints-wrapper{
   position: relative;
   background-color:#FADF63;
-  grid-row-start: 2;
+  grid-row-start: 1;
   display: grid;
   grid-template-rows: 15% 60% 20%;
   grid-template-columns: 50% 50%;
@@ -111,12 +102,16 @@ h1{
   height: 15%;
   width: 25%;
   color: white;
+  border-radius: 30px;
+  border: 3px solid white !important;
 
   background-color: #160F29;
   opacity: 0.8;
   border: none;
   transition: 0.4s;
   font-family: Lexend Deca;
+  cursor: pointer;
+  margin: 2px;
 }
 
 #hint-array button:hover{
@@ -258,7 +253,7 @@ h4{
 /*SCOREBOARD------------------------------------------------------------------*/
 .score-wrapper{
     background-color: #246A73;
-    grid-row-start: 2;
+    grid-row-start: 3;
 
     padding: 10px;
     position: relative;
