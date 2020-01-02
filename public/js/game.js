@@ -324,7 +324,11 @@ socket.on('populate-sidebar', (players)=>{
   sfxTut.currentTime = 0
   sfxTut.play()
   for(i=0; i< players.length; i++){
-    $players[i].style.display = "block"
+    if(window.innerWidth > 800){
+      $players[i].style.display = "block"
+    }else{
+      $players[i].style.display = "inline-block"
+    }
     $players[i].innerHTML = `<img src = ${allAvatars[players[i].avatar]}>
                             <div class = "playertext">
                                 <h2>${players[i].username}</h2>
@@ -407,6 +411,7 @@ socket.on('end-round', ({players, word})=>{
   for(let i = 0; i<players.length; i++){
     html += `${players[i].name}: ${players[i].score}pts<br/>`
   }
+  document.getElementById('helper-msg').innerHTML = 'ⓘ Type a hint below to display on the hint log'
   notification('Round has ended!', html, 0)
 })
 
