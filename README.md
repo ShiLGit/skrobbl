@@ -1,9 +1,9 @@
 # skrobbl
-Multiplayer web game inspired by skribbl.io (made w/ socket.io and nodejs)
+Backend: Nodejs + Express + Socket.io | Frontend: Vanilla CSS + JavaScript 
+
+Multiplayer word-guessing web game inspired by skribbl.io, except hints are given via messages that are run through a translation service many times (+buttons) rather than through drawing.
 
 Deployed on Heroku : http://skrobbl.herokuapp.com/ 
-
-Server side made with nodejs and socket.io; front-end made with vanilla css/Javascript/HTML (+ some libraries)
 
 ------------------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ Win condition: get the most points at the end of the game.
 
 2) All other players are guessers. They earn points by correctly guessing the secret word. The game ends when every player has had a turn as the typer. 
 
->>The typer may give hints to the other players: 
+The typer may give hints to the other players: 
   1) Send a message that gets run through Yandex Translate several times before printing (to muddle its meaning)
   2) Choose relevant words from an array of randomly-populated buttons for other players to see
 
