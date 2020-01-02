@@ -159,7 +159,7 @@ h1{
   width:90%;
 
   border-radius: 2px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #send-verbal-hint{
@@ -242,7 +242,7 @@ h1{
 
   font-family: Lexend Deca;
   font-size: 16px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #send-message{
@@ -273,7 +273,7 @@ h4{
 
     padding: 10px;
     position: relative;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .player{
@@ -402,7 +402,7 @@ h4{
   min-height: 90%;
 
   height: 80%;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 /*INSTANTIATED----------------------------------------------------------------*/
 .msg-bg{

@@ -9,13 +9,12 @@ QUIIK CALORS
 */
 
 body{
-  background-color: red;
   overflow: scroll;
 }
 
 .wrapper{
   display: grid;
-  grid-template-rows:60vh 40vh 20vh 20vh;
+  grid-template-rows:50vh 50vh 20vh 20vh;
   grid-row-gap: 10px;
   grid-template-columns: 95vw;
 }
@@ -152,8 +151,14 @@ h1{
     background-color: white;
     grid-column-start: 1;
     grid-column-end: 3;
-
+    overflow-y: auto;
     display: none;
+}
+#hintbar{
+  height: 30%;
+  margin: none;
+  padding: 2px !important;
+  vertical-align: top;
 }
 #helper-bar{
   margin-top: 0px;
@@ -172,6 +177,7 @@ h1{
   font-family: Lexend Deca;
   padding: 5px;
   padding-left: 3%;
+  margin-bottom: 2px;
 }
 #send-verbal-hint input{
   width: 75%;
@@ -184,7 +190,7 @@ h1{
 #send-verbal-hint button{
   font-family: Lexend Deca;
 
-  height: 48px;
+  height: 40%;
   background-color: #2F3061;
   border: 2px solid #272850;
   width: 15%;
@@ -217,16 +223,15 @@ h1{
   background-color: #160F29;
   grid-row-start: 2;
 
-  padding: 20px;
+  padding: 10px;
 }
 
 #message-container{
   width: 95%;
-  height: 80%;
-  padding: 15px;
+  height: 65%;
   font-family: Lexend Deca;
-  font-size: 16px;
-  overflow-y: scroll;
+  font-size: 14px;
+  overflow-y: auto;
 }
 
 #send-message{
@@ -257,7 +262,7 @@ h4{
 
     padding: 10px;
     position: relative;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .player{
@@ -279,7 +284,7 @@ h4{
 }
 .playertext{
   display: inline-block;
-  height: 5vh;
+  height: 90%;
 }
 .playertext h2{
   font-size: 20px;
