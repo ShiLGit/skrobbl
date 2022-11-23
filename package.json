@@ -8,7 +8,7 @@
     "line-reader": "^0.4.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.5.0",
     "spell-checker-js": "^1.2.6",
     "yandex-translate": "^2.1.3"
   },
